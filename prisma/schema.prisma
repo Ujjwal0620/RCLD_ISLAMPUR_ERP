@@ -1,11 +1,5 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql" url = env("DATABASE_URL") }
 
 enum UserStatus { ACTIVE INVITED SUSPENDED DISABLED }
 enum StudentType { OFFLINE ONLINE }
@@ -185,8 +179,4 @@ model AuditLog {
   @@index([entityType, entityId])
   @@index([createdAt])
 }
-model SystemSetting {
-  key String @id
-  value Json
-  updatedAt DateTime @updatedAt
-}
+model SystemSetting { key String @id value Json updatedAt DateTime @updatedAt }
