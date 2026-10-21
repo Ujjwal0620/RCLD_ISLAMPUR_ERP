@@ -29,6 +29,8 @@ export default async function DashboardPage() {
           </form>
         </header>
 
+        <div className="mb-6"><a href="/dashboard/admin" className="inline-flex rounded-xl border border-white/10 px-4 py-2 text-sm font-semibold">Superadmin Control Center</a></div>
+
         <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map(([title, description, Icon]) => (
             <div key={title} className="glass glass-hover rounded-2xl p-6">
