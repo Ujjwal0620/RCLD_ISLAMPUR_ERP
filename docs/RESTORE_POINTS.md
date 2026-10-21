@@ -17,3 +17,17 @@ If a future build must be rolled back, restore `main` to the exact checkpoint co
 ### Rule
 
 Every major completed build should receive a documented restore point before the next major feature area is started. Do not overwrite an existing restore point.
+
+
+## Restore Point: Enrollment & Payment Foundation v0.4
+
+- **Commit:** `af710dd340941ff9d40cf4110161e48c44889304`
+- **Date:** 2026-10-21
+- **Status:** Stable checkpoint — GitHub Actions build passed
+- **Scope:** Pending online enrollment state, authenticated enrollment API foundation, enrollment UI state handling, payment-provider abstraction/configuration checks, and PhonePe/Razorpay environment placeholders.
+- **Branch:** `main`
+- **CI:** Workflow run `39555629133` completed successfully, including dependency install, Prisma client generation, and Next.js production build.
+
+### Database note
+
+The application schema now expects new online enrollments to default to `PENDING`. Git rollback does not roll back the Neon production database. Production schema alignment must be handled and verified separately before payment activation is treated as production-ready.
