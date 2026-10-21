@@ -30,3 +30,15 @@ button,input,select,textarea { font: inherit; }
 .course-banner { background:linear-gradient(135deg,rgba(239,246,255,.9),rgba(219,234,254,.78) 48%,rgba(248,250,252,.9)); }
 .grid-pattern { background-image:linear-gradient(rgba(148,163,184,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(148,163,184,.09) 1px,transparent 1px); background-size:34px 34px; }
 .text-gradient { background:linear-gradient(90deg,#1d4ed8,#0284c7,#4f46e5); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+/* ERP interaction system */
+.erp-panel{background:rgba(255,255,255,.86);border:1px solid rgba(148,163,184,.18);box-shadow:0 14px 45px rgba(15,23,42,.06);border-radius:20px}
+.erp-panel-hover{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.erp-panel-hover:hover{transform:translateY(-3px);box-shadow:0 22px 60px rgba(15,23,42,.10);border-color:rgba(59,130,246,.25)}
+.erp-input{width:100%;border:1px solid #e2e8f0;background:#fff;border-radius:12px;padding:.7rem .85rem;outline:none;transition:border-color .15s,box-shadow .15s}
+.erp-input:focus{border-color:#60a5fa;box-shadow:0 0 0 4px rgba(59,130,246,.08)}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:#94a3b8}
+@media(prefers-reduced-motion:no-preference){.erp-enter{animation:erpEnter .35s ease both}@keyframes erpEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}}
