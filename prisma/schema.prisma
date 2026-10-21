@@ -1,61 +1,265 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+generator client {
+  provider = "prisma-client-js"
+}
 
-enum UserStatus { ACTIVE INVITED SUSPENDED DISABLED }
-enum StudentType { OFFLINE ONLINE }
-enum StudentStatus { ACTIVE COMPLETED TRANSFERRED DROPPED_OUT SUSPENDED CANCELLED }
-enum BatchStatus { PLANNED ACTIVE COMPLETED CANCELLED }
-enum EnrollmentStatus { ACTIVE COMPLETED CANCELLED }
-enum PaymentStatus { PENDING PAID FAILED REFUNDED }
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  INVITED
+  SUSPENDED
+  DISABLED
+}
+
+enum StudentType {
+  OFFLINE
+  ONLINE
+}
+
+enum StudentStatus {
+  ACTIVE
+  COMPLETED
+  TRANSFERRED
+  DROPPED_OUT
+  SUSPENDED
+  CANCELLED
+}
+
+enum BatchStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
 
 model User {
-  id String @id @default(cuid())
-  name String
-  email String @unique
+  id           String       @id @default(cuid())
+  name         String
+  email        String       @unique
   passwordHash String
-  phone String?
-  status UserStatus @default(ACTIVE)
-  userRoles UserRole[]
-  employee Employee?
-  student Student?
-  auditLogs AuditLog[] @relation("ActorAudit")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  phone        String?
+  status       UserStatus   @default(ACTIVE)
+  userRoles    UserRole[]
+  employee     Employee?
+  student      Student?
+  auditLogs    AuditLog[]   @relation("ActorAudit")
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
-model Role { id String @id @default(cuid()); name String @unique; description String?; users UserRole[]; permissions RolePermission[]; createdAt DateTime @default(now()); updatedAt DateTime @updatedAt }
-model Permission { id String @id @default(cuid()); key String @unique; description String?; roles RolePermission[] }
-model UserRole { userId String; roleId String; user User @relation(fields:[userId], references:[id], onDelete: Cascade); role Role @relation(fields:[roleId], references:[id], onDelete: Cascade); createdAt DateTime @default(now()); @@id([userId, roleId]); @@index([roleId]) }
-model RolePermission { roleId String; permissionId String; role Role @relation(fields:[roleId], references:[id], onDelete: Cascade); permission Permission @relation(fields:[permissionId], references:[id], onDelete: Cascade); @@id([roleId, permissionId]); @@index([permissionId]) }
-model Employee { id String @id @default(cuid()); userId String @unique; employeeCode String @unique; designation String?; joinedAt DateTime?; user User @relation(fields:[userId], references:[id], onDelete: Cascade); createdAt DateTime @default(now()); updatedAt DateTime @updatedAt }
-model Student { id String @id @default(cuid()); userId String? @unique; registrationNo String? @unique; name String; phone String?; email String?; studentType StudentType; status StudentStatus @default(ACTIVE); user User? @relation(fields:[userId], references:[id], onDelete: SetNull); enrollments BatchEnrollment[]; onlineEnrollments OnlineEnrollment[]; lessonProgress LessonProgress[]; createdAt DateTime @default(now()); updatedAt DateTime @updatedAt }
-model Course {
-  id String @id @default(cuid())
-  code String @unique
-  name String
-  shortDescription String?
+
+model Role {
+  id          String           @id @default(cuid())
+  name        String           @unique
   description String?
-  category String?
-  duration String?
-  eligibility String?
-  standardFee Decimal? @db.Decimal(12,2)
-  onlineFee Decimal? @db.Decimal(12,2)
-  imageUrl String?
-  bannerUrl String?
-  features Json?
-  syllabus Json?
-  active Boolean @default(true)
-  onlinePublished Boolean @default(true)
-  batches Batch[]
-  modules CourseModule[]
-  onlineEnrollments OnlineEnrollment[]
+  users       UserRole[]
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Permission {
+  id          String           @id @default(cuid())
+  key         String           @unique
+  description String?
+  roles       RolePermission[]
+}
+
+model UserRole {
+  userId    String
+  roleId    String
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+
+  @@id([userId, roleId])
+  @@index([roleId])
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+}
+
+model Employee {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  employeeCode String   @unique
+  designation  String?
+  joinedAt     DateTime?
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Student {
+  id               String             @id @default(cuid())
+  userId           String?            @unique
+  registrationNo   String?            @unique
+  name             String
+  phone            String?
+  email            String?
+  studentType      StudentType
+  status           StudentStatus      @default(ACTIVE)
+  user             User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  enrollments      BatchEnrollment[]
+  onlineEnrollments OnlineEnrollment[]
+  lessonProgress   LessonProgress[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model Course {
+  id               String             @id @default(cuid())
+  code             String             @unique
+  name             String
+  shortDescription String?
+  description      String?
+  category         String?
+  duration         String?
+  eligibility      String?
+  standardFee      Decimal?           @db.Decimal(12, 2)
+  onlineFee        Decimal?           @db.Decimal(12, 2)
+  imageUrl         String?
+  bannerUrl        String?
+  features         Json?
+  syllabus         Json?
+  active           Boolean            @default(true)
+  onlinePublished  Boolean            @default(true)
+  batches          Batch[]
+  modules          CourseModule[]
+  onlineEnrollments OnlineEnrollment[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+}
+
+model Batch {
+  id          String             @id @default(cuid())
+  code        String             @unique
+  name        String
+  courseId    String
+  capacity    Int                @default(50)
+  status      BatchStatus        @default(PLANNED)
+  startsAt    DateTime?
+  endsAt      DateTime?
+  course      Course             @relation(fields: [courseId], references: [id])
+  enrollments BatchEnrollment[]
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+model BatchEnrollment {
+  id        String   @id @default(cuid())
+  studentId String
+  batchId   String
+  joinedAt  DateTime @default(now())
+  leftAt    DateTime?
+  active    Boolean  @default(true)
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  batch     Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([batchId])
+}
+
+model OnlineEnrollment {
+  id            String           @id @default(cuid())
+  studentId     String
+  courseId      String
+  status        EnrollmentStatus @default(ACTIVE)
+  paymentStatus PaymentStatus    @default(PENDING)
+  paidAmount    Decimal?         @db.Decimal(12, 2)
+  enrolledAt    DateTime         @default(now())
+  student       Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course        Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+  @@index([courseId])
+}
+
+model CourseModule {
+  id          String        @id @default(cuid())
+  courseId    String
+  title       String
+  description String?
+  sortOrder   Int           @default(0)
+  published   Boolean       @default(true)
+  course      Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons     Lesson[]
+
+  @@index([courseId, sortOrder])
+}
+
+model Lesson {
+  id              String           @id @default(cuid())
+  moduleId        String
+  title           String
+  description     String?
+  videoUrl        String?
+  videoProvider   String?          @default("youtube")
+  resourceUrl     String?
+  durationMinutes Int?
+  sortOrder       Int              @default(0)
+  published       Boolean          @default(true)
+  module          CourseModule     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress        LessonProgress[]
+
+  @@index([moduleId, sortOrder])
+}
+
+model LessonProgress {
+  id                 String   @id @default(cuid())
+  studentId          String
+  lessonId           String
+  completed          Boolean  @default(false)
+  watchedSeconds     Int      @default(0)
+  lastPositionSeconds Int     @default(0)
+  completedAt        DateTime?
+  updatedAt          DateTime @updatedAt
+  student            Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  lesson             Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, lessonId])
+  @@index([studentId])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  actorUserId String?
+  action      String
+  entityType  String?
+  entityId    String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  actor       User?    @relation("ActorAudit", fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([actorUserId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+model SystemSetting {
+  key       String   @id
+  value     Json
   updatedAt DateTime @updatedAt
 }
-model Batch { id String @id @default(cuid()); code String @unique; name String; courseId String; capacity Int @default(50); status BatchStatus @default(PLANNED); startsAt DateTime?; endsAt DateTime?; course Course @relation(fields:[courseId], references:[id]); enrollments BatchEnrollment[]; createdAt DateTime @default(now()); updatedAt DateTime @updatedAt }
-model BatchEnrollment { id String @id @default(cuid()); studentId String; batchId String; joinedAt DateTime @default(now()); leftAt DateTime?; active Boolean @default(true); student Student @relation(fields:[studentId], references:[id], onDelete: Cascade); batch Batch @relation(fields:[batchId], references:[id], onDelete: Cascade); @@index([studentId]); @@index([batchId]) }
-model OnlineEnrollment { id String @id @default(cuid()); studentId String; courseId String; status EnrollmentStatus @default(ACTIVE); paymentStatus PaymentStatus @default(PENDING); paidAmount Decimal? @db.Decimal(12,2); enrolledAt DateTime @default(now()); student Student @relation(fields:[studentId], references:[id], onDelete: Cascade); course Course @relation(fields:[courseId], references:[id], onDelete: Cascade); @@unique([studentId, courseId]); @@index([courseId]) }
-model CourseModule { id String @id @default(cuid()); courseId String; title String; description String?; sortOrder Int @default(0); published Boolean @default(true); course Course @relation(fields:[courseId], references:[id], onDelete: Cascade); lessons Lesson[]; @@index([courseId, sortOrder]) }
-model Lesson { id String @id @default(cuid()); moduleId String; title String; description String?; videoUrl String?; videoProvider String? @default("youtube"); resourceUrl String?; durationMinutes Int?; sortOrder Int @default(0); published Boolean @default(true); module CourseModule @relation(fields:[moduleId], references:[id], onDelete: Cascade); progress LessonProgress[]; @@index([moduleId, sortOrder]) }
-model LessonProgress { id String @id @default(cuid()); studentId String; lessonId String; completed Boolean @default(false); watchedSeconds Int @default(0); lastPositionSeconds Int @default(0); completedAt DateTime?; updatedAt DateTime @updatedAt; student Student @relation(fields:[studentId], references:[id], onDelete: Cascade); lesson Lesson @relation(fields:[lessonId], references:[id], onDelete: Cascade); @@unique([studentId, lessonId]); @@index([studentId]) }
-model AuditLog { id String @id @default(cuid()); actorUserId String?; action String; entityType String?; entityId String?; metadata Json?; createdAt DateTime @default(now()); actor User? @relation("ActorAudit", fields:[actorUserId], references:[id], onDelete: SetNull); @@index([actorUserId]); @@index([entityType, entityId]); @@index([createdAt]) }
-model SystemSetting { key String @id; value Json; updatedAt DateTime @updatedAt }
