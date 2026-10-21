@@ -1,0 +1,1 @@
+"use client"; import { LogOut } from "lucide-react"; export default function StudentLogout(){return <button onClick={async()=>{await fetch("/api/student/logout",{method:"POST"});window.location.href="/student/login"}} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white/70 px-3 py-2 text-xs font-black"><LogOut size={15}/> Logout</button>}
