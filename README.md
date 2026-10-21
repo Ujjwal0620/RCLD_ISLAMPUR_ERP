@@ -1,71 +1,41 @@
 # RCLD Islampur ERP
 
-An ERP (Enterprise Resource Planning) system for **RCLD Islampur** to manage academic, administrative, student, teacher, and institutional operations from a centralized platform.
+A unified digital platform for **RCLD Islampur** covering the public website/CMS, offline student ERP, CRM, admissions, courses and batches, fees and finance, employee HR/payroll, tasks, exams/certificates, online LMS, inventory and AI-assisted workflows.
 
-## User Roles
+## Documentation
 
-The system will initially support three main user roles:
+The project requirements and architecture are maintained in **[docs/README.md](./docs/README.md)**.
 
-### 1. Superadmin
-- Complete system control
-- Manage administrators, teachers, students, and users
-- Manage roles and permissions
-- Manage academic structure and system settings
-- Monitor overall system activity
-- Access reports and analytics
-- Manage institutional configuration
+> The `/docs` directory is the project's permanent source of truth. Major business-rule, permission, architecture and integration changes must be documented there.
 
-### 2. Admin / Teacher
-- Manage student information
-- Manage classes, subjects, and academic activities
-- Attendance management
-- Assignments, study materials, and notices
-- Examination and marks management
-- Student performance tracking
-- Communication with students
-- View relevant reports and dashboards
+## Initial User Types
 
-### 3. Student
-- Personal profile and academic information
-- Class and subject information
-- Attendance records
-- Assignments and study materials
-- Examination schedules and results
-- Notices and announcements
-- Academic performance tracking
-- Access to relevant learning resources
+- **Superadmin** — complete system governance, roles, permissions and configuration.
+- **Employees / Teachers / Admin users** — may hold multiple Superadmin-configured roles.
+- **Offline Students** — admission, batch, attendance, fees, learning, exams and certificates.
+- **Online Students** — separate accounts for online course purchase and LMS access.
 
-## ERP Scope
+## Initial Course Codes
 
-The goal is to build a complete ERP platform that can gradually cover the major operations of RCLD Islampur, including:
+CCA, DCA, ADCA, CCC, CAO, DWPD, DOM, DCST, DCAP and DHNT.
 
-- User and role management
-- Student management
-- Teacher/staff management
-- Class and subject management
-- Academic session management
-- Attendance management
-- Timetable management
-- Examination and result management
-- Assignment and study material management
-- Notice and announcement management
-- Fee and payment management
-- Student performance and academic reports
-- Communication and notifications
-- Dashboard and analytics
-- Institution and system settings
-- Audit logs and activity tracking
+Course details are configurable and will be finalized later.
 
-Additional modules and features can be added as the requirements of RCLD Islampur evolve.
+## Planned Stack
 
-## Project Status
+- Next.js App Router
+- JavaScript
+- Neon PostgreSQL
+- Prisma
+- Tailwind CSS
+- Object storage for images/documents
+- YouTube-hosted recorded lessons initially
+- PhonePe initially, with payment-provider abstraction for Razorpay
+- Groq API through an AI-provider abstraction
+- Vercel for testing; production hosting finalized later
 
-**Current Status:** Initial planning and setup.
+## Status
 
-The system will be developed incrementally, starting with the core authentication, user roles, dashboards, and academic management features.
+**SDLC Phase: Requirements & System Design**
 
-## Future Development
-
-The architecture should be designed to be scalable and maintainable so that new ERP modules can be added without affecting existing functionality.
-
-> This README describes the initial project direction. Detailed functional requirements, technology choices, database design, API documentation, and development guidelines will be added as the project progresses.
+Implementation should follow the approved documentation and phased roadmap in `/docs`.
