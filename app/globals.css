@@ -1,53 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #07111f;
-  --foreground: #eef6ff;
-  --muted: #9bb0c7;
-  --line: rgba(255,255,255,.11);
-  --glass: rgba(255,255,255,.065);
-  --accent: #61dafb;
-  --accent-2: #8b7cff;
+  --background:#f8fafc; --foreground:#0f172a; --muted:#64748b; --line:#e2e8f0;
+  --brand:#2563eb; --brand-dark:#1d4ed8; --surface:#ffffff; --soft:#eff6ff;
 }
-
-* { box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  margin: 0;
-  background:
-    radial-gradient(circle at 10% 10%, rgba(97,218,251,.14), transparent 30%),
-    radial-gradient(circle at 90% 15%, rgba(139,124,255,.14), transparent 28%),
-    linear-gradient(135deg, #07111f 0%, #0b1526 50%, #07101d 100%);
-  color: var(--foreground);
-  min-height: 100vh;
-}
-
-button, input { font: inherit; }
-
-.glass {
-  background: var(--glass);
-  border: 1px solid var(--line);
-  box-shadow: 0 20px 70px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-.glass-hover {
-  transition: transform .2s ease, border-color .2s ease, background .2s ease;
-}
-.glass-hover:hover {
-  transform: translateY(-3px);
-  border-color: rgba(97,218,251,.28);
-  background: rgba(255,255,255,.085);
-}
-
-.text-muted { color: var(--muted); }
-
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:var(--foreground);min-height:100vh}
+button,input,select,textarea{font:inherit}
+::selection{background:#bfdbfe;color:#172554}
+.text-muted{color:var(--muted)}
+.site-shell{background:linear-gradient(180deg,#fff 0%,#f8fafc 55%,#fff 100%)}
+.surface{background:rgba(255,255,255,.92);border:1px solid var(--line);box-shadow:0 14px 40px rgba(15,23,42,.07)}
+.surface-hover{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
+.surface-hover:hover{transform:translateY(-4px);box-shadow:0 22px 55px rgba(15,23,42,.12);border-color:#bfdbfe}
+.hero-glow{background:radial-gradient(circle at 15% 20%,rgba(37,99,235,.12),transparent 34%),radial-gradient(circle at 85% 10%,rgba(14,165,233,.10),transparent 30%)}
+.course-banner{background:linear-gradient(135deg,#eff6ff,#dbeafe 48%,#f8fafc)}
