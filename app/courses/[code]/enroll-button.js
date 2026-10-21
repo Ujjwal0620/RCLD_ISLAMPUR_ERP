@@ -29,12 +29,30 @@ export default function EnrollButton({ courseCode, onlineFee }) {
         return;
       }
 
+      if (!data.payment?.configured) {
+        setState("pending");
+        setMessage("Enrollment is saved as pending. Online payment will be enabled after the payment gateway is configured.");
+        return;
+      }
+
+      const checkoutResponse = await fetch("/api/student/payment/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ enrollmentId: data.enrollment.id }),
+      });
+      const checkout = await checkoutResponse.json().catch(() => ({}));
+
+      if (checkout.ok && checkout.alreadyPaid) {
+        window.location.href = checkout.redirectUrl || "/student/dashboard";
+        return;
+      }
+      if (checkout.ok && checkout.redirectUrl) {
+        window.location.href = checkout.redirectUrl;
+        return;
+      }
+
       setState("pending");
-      setMessage(
-        data.payment?.configured
-          ? "Enrollment is ready. Continue to the secure payment step."
-          : "Enrollment is saved as pending. Online payment will be enabled after the payment gateway is configured."
-      );
+      setMessage(checkout.error || "Your enrollment is pending. Secure payment checkout is not available yet.");
     } catch (error) {
       setState("error");
       setMessage(error.message || "Unable to start enrollment.");
