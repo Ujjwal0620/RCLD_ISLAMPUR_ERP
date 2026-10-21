@@ -44,6 +44,7 @@ model User {
   status       UserStatus   @default(ACTIVE)
   userRoles    UserRole[]
   employee     Employee?
+  student      Student?
   auditLogs    AuditLog[]   @relation("ActorAudit")
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
