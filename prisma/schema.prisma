@@ -36,6 +36,7 @@ enum BatchStatus {
 }
 
 enum EnrollmentStatus {
+  PENDING
   ACTIVE
   COMPLETED
   CANCELLED
