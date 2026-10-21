@@ -58,7 +58,7 @@
 - [x] YouTube lesson support
 - [x] Lesson completion/progress tracking
 - [ ] Enrollment confirmation workflow
-- [ ] Payment gateway abstraction
+- [x] Payment gateway abstraction
 - [ ] PhonePe integration
 - [ ] Payment callback/webhook verification
 - [ ] Paid enrollment activation
@@ -184,7 +184,7 @@
 - [ ] Cash payment
 - [ ] UPI/manual payment
 - [ ] PhonePe
-- [ ] Razorpay-ready abstraction
+- [x] Razorpay-ready abstraction
 - [ ] Refund workflow
 - [ ] Payment reconciliation
 - [ ] Financial reports
@@ -266,16 +266,16 @@
 
 ## Current Build Queue
 
-1. [ ] Verify the current LMS build in CI.
-2. [ ] Create the next restore point after CI verification.
-3. [ ] Build the online enrollment/payment state machine.
-4. [ ] Add PhonePe-ready payment abstraction.
-5. [ ] Implement payment callback/webhook verification.
-6. [ ] Activate enrollment only after verified payment.
-7. [ ] Add enrollment/payment student UI.
-8. [ ] Verify CI again.
-9. [ ] Create the next restore point.
-10. [ ] Continue to the next ERP milestone.
+1. [x] Verify enrollment/payment foundation in CI.
+2. [x] Record the verified enrollment/payment foundation restore point.
+3. [x] Build pending online enrollment state.
+4. [x] Add PhonePe/Razorpay-ready payment provider abstraction and configuration checks.
+5. [ ] Implement PhonePe checkout creation using the current official API.
+6. [ ] Implement payment callback/webhook verification.
+7. [ ] Activate enrollment only after verified payment.
+8. [ ] Add payment failure/retry handling.
+9. [ ] Add enrollment/payment student UI.
+10. [ ] Verify CI and record the next restore point.
 
 ## Restore Point Policy
 
