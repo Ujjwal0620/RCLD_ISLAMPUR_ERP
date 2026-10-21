@@ -2,12 +2,13 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
-import { Users, ShieldCheck, BookOpen, Settings, FileSearch } from "lucide-react";
+import { Users, ShieldCheck, BookOpen, Settings, FileSearch, PlayCircle } from "lucide-react";
 
 const modules = [
   ["/dashboard/admin/users","Users","Manage ERP users and employee accounts.",Users,"employees.manage"],
   ["/dashboard/admin/roles","Roles & Permissions","Create and control custom access roles.",ShieldCheck,"roles.manage"],
   ["/dashboard/admin/courses","Courses","Manage course codes, fees, duration and status.",BookOpen,"courses.manage"],
+  ["/dashboard/admin/courses/content","LMS Content","Create modules, lessons and YouTube learning content.",PlayCircle,"lms.manage"],
   ["/dashboard/admin/settings","System Settings","Manage institution and operational defaults.",Settings,"roles.manage"],
   ["/dashboard/admin/audit","Audit Logs","Review important administrative actions.",FileSearch,"audit.view"]
 ];
