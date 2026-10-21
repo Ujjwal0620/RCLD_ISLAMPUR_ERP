@@ -5,7 +5,7 @@ import {LayoutDashboard,Users,BookOpen,GraduationCap,ShieldCheck,Settings,FileSe
 import {useState} from "react";
 const items=[
 {href:"/dashboard",label:"Overview",icon:LayoutDashboard},
-{href:"/dashboard/admin/users",label:"Users & Employees",icon:Users,permission:"employees.manage"},
+{href:"/dashboard/admin/users",label:"Users & Employees",icon:Users,permission:"employees.manage"},{href:"/dashboard/admin/students",label:"Student Master",icon:GraduationCap,permission:"students.view"},
 {href:"/dashboard/admin/courses",label:"Courses",icon:BookOpen,permission:"courses.manage"},
 {href:"/dashboard/admin/courses/content",label:"LMS Content",icon:GraduationCap,permission:"lms.manage"},
 {href:"/dashboard/admin/roles",label:"Roles & Permissions",icon:ShieldCheck,permission:"roles.manage"},
