@@ -19,6 +19,17 @@ If a future build must be rolled back, restore `main` to the exact checkpoint co
 Every major completed build should receive a documented restore point before the next major feature area is started. Do not overwrite an existing restore point.
 
 
+
+## Recovery Checkpoint: Exam Build Repair — 2026-10-22
+
+- **Commit:** `0ee9f64cb49d4067e53a34d45de18094938e6ee9`
+- **Date:** 2026-10-22
+- **Status:** Recovery checkpoint — CI verification in progress; do not treat as a stable production checkpoint until CI passes.
+- **Scope:** Repairs the malformed JSX in the exam management studio that caused the GitHub Actions production build to fail. This checkpoint preserves the current ERP state through exams/results, attendance, fee collection, batch/faculty workflows and the global workspace assistant.
+- **Branch:** `main`
+- **CI run:** `39720917878` — currently in progress.
+- **Vercel:** Deployment remains rate-limited by the Vercel account/build limit; this is external to the application source and cannot be cleared by a code change.
+
 ## Restore Point: Enrollment & Payment Foundation v0.4
 
 - **Commit:** `af710dd340941ff9d40cf4110161e48c44889304`
