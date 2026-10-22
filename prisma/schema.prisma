@@ -85,6 +85,7 @@ model User {
   employee     Employee?
   student      Student?
   auditLogs    AuditLog[]   @relation("ActorAudit")
+  batchTransfers BatchTransfer[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 }
@@ -134,6 +135,7 @@ model Employee {
   designation  String?
   joinedAt     DateTime?
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  batchFaculties BatchFaculty[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -191,6 +193,9 @@ model Batch {
   endsAt      DateTime?
   course      Course             @relation(fields: [courseId], references: [id])
   enrollments BatchEnrollment[]
+  faculties   BatchFaculty[]
+  transfersFrom BatchTransfer[] @relation("TransferFromBatch")
+  transfersTo   BatchTransfer[] @relation("TransferToBatch")
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
 }
@@ -205,10 +210,41 @@ model BatchEnrollment {
   student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   batch     Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
   feeLedger FeeLedger?
+  transfers BatchTransfer[]
 
   @@unique([studentId, batchId])
   @@index([studentId])
   @@index([batchId])
+}
+
+model BatchFaculty {
+  id         String   @id @default(cuid())
+  batchId    String
+  employeeId String
+  assignedAt DateTime @default(now())
+  batch      Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([batchId, employeeId])
+  @@index([employeeId])
+}
+
+model BatchTransfer {
+  id                String          @id @default(cuid())
+  batchEnrollmentId String
+  fromBatchId       String
+  toBatchId         String
+  reason            String?
+  transferredAt     DateTime        @default(now())
+  actorUserId       String?
+  batchEnrollment   BatchEnrollment @relation(fields: [batchEnrollmentId], references: [id], onDelete: Cascade)
+  fromBatch         Batch           @relation("TransferFromBatch", fields: [fromBatchId], references: [id], onDelete: Cascade)
+  toBatch           Batch           @relation("TransferToBatch", fields: [toBatchId], references: [id], onDelete: Cascade)
+  actor              User?           @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+
+  @@index([batchEnrollmentId])
+  @@index([fromBatchId])
+  @@index([toBatchId])
 }
 
 model FeeLedger {
