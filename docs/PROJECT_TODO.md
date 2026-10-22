@@ -266,22 +266,36 @@
 
 ## Current Build Queue
 
-> Stabilization update (2026-10-22): fixed ERP topbar build syntax, migrated Next.js middleware to proxy, fixed the student login redirect loop, removed unnecessary forced-dynamic flags from shared dashboard/student shells, and added the Admissions operations workspace. Performance and operational ERP build now proceed before payment completion.
+> Audit update (2026-10-22): current development remains on `main`. The latest audit identified and fixed a missing navigation icon import that could fail the Vercel build. Global ERP/student workspace assistant support, loading/error resilience, production headers and Prisma validation in CI have been added. Vercel verification is still pending.
 
-1. [x] Verify enrollment/payment foundation in CI.\n2. [x] Build the first premium academic course/batch operations workspace.
+1. [x] Verify enrollment/payment foundation in CI.
+2. [x] Build premium academic course/batch operations workspace.
 3. [x] Separate offline students, online students and employees into dedicated operational pages.
-4. [x] Add real offline admission-to-fee-ledger transaction foundation and payment validation.
-5. [ ] Apply and verify the new Prisma fee schema on the production Neon database.
-12. [x] Record the verified enrollment/payment foundation restore point.
-13. [x] Build pending online enrollment state.
-14. [x] Add PhonePe/Razorpay-ready payment provider abstraction and configuration checks.
-15. [ ] Implement PhonePe checkout creation using the current official API.
-7. [ ] Implement payment callback/webhook verification.
-8. [ ] Activate enrollment only after verified payment.
-9. [ ] Add payment failure/retry handling.
-19. [ ] Add enrollment/payment student UI.
-20. [ ] Verify CI/Vercel and promote the next restore point.
+4. [x] Add offline admission-to-fee-ledger transaction foundation.
+5. [x] Add installment overpayment validation.
+6. [x] Add global workspace assistant without exposing implementation/model details.
+7. [x] Add dashboard/student loading and error recovery states.
+8. [x] Add production security headers and compression.
+9. [x] Add Prisma schema validation to CI.
+10. [ ] Apply and verify the fee schema against the production Neon database.
+11. [ ] Verify the current Vercel deployment successfully.
+12. [ ] Promote a new verified restore point after CI + Vercel pass.
+13. [ ] Implement PhonePe checkout creation using the current official API.
+14. [ ] Implement payment callback/webhook verification.
+15. [ ] Activate online enrollment only after verified payment.
+16. [ ] Add payment failure/retry handling.
+17. [ ] Build fee collection UI and printable receipts.
+18. [ ] Build faculty assignment and batch transfer workflow.
+19. [ ] Build manual student attendance and reports.
+20. [ ] Build employee attendance and evidence workflow.
+21. [ ] Build exams/results.
+22. [ ] Build certificates and public QR verification.
+23. [ ] Build CRM lead/follow-up/conversion workflow.
+24. [ ] Build communication, inventory, payroll and leave modules.
+25. [ ] Build AI tutor knowledge restrictions, admin analytics and employee assistant workflows.
+26. [ ] Complete localization, object storage and production smoke tests.
+27. [ ] Complete final production readiness and rollback drill.
 
 ## Restore Point Policy
 
-A restore point is created only after the relevant build has passed verification. The restore point records the exact Git commit and scope. Future work must not silently replace or rewrite an existing checkpoint.
+A restore point is promoted only after the relevant build passes verification. The currently documented safe rollback point is recorded in `docs/RESTORE_POINTS.md`; unverified changes remain explicitly marked as such.
