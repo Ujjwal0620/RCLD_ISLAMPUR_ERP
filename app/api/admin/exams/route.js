@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
 
-const examSchema=z.object({batchId:z.string(),title:z.string().trim().min(2).max(160),instructions:z.string().trim().max(2000).optional().or(z.literal("")),durationMinutes:z.coerce.number().int().min(1).max(600),negativeMarking:z.boolean().default(false),negativeMarks:z.coerce.number().min(0).max(100).default(0),passMarks:z.coerce.number().min(0).max(100000),maxAttempts:z.coerce.number().int().min(1).max(20),published:z.boolean().default(false)});
+const examSchema=z.object({batchId:z.string().optional().or(z.literal("")),courseId:z.string().optional().or(z.literal("")),title:z.string().trim().min(2).max(160),instructions:z.string().trim().max(2000).optional().or(z.literal("")),durationMinutes:z.coerce.number().int().min(1).max(600),negativeMarking:z.boolean().default(false),negativeMarks:z.coerce.number().min(0).max(100).default(0),passMarks:z.coerce.number().min(0).max(100000),maxAttempts:z.coerce.number().int().min(1).max(20),published:z.boolean().default(false)});
 const questionSchema=z.object({examId:z.string(),questionText:z.string().trim().min(2).max(5000),type:z.enum(["MCQ","DESCRIPTIVE"]),options:z.array(z.string().trim().min(1).max(500)).max(10).optional(),correctAnswer:z.string().trim().max(500).optional().or(z.literal("")),marks:z.coerce.number().positive().max(1000),sortOrder:z.coerce.number().int().min(0).default(0)});
 
 export async function GET(req){
@@ -15,7 +15,10 @@ export async function GET(req){
 }
 export async function POST(req){
  const user=await getCurrentUser();if(!user||!hasPermission(user,"exams.manage"))return NextResponse.json({error:"Forbidden"},{status:403});
- try{const d=examSchema.parse(await req.json());const batch=await db.batch.findUnique({where:{id:d.batchId},select:{id:true}});if(!batch)throw new Error("Batch not found.");
- const exam=await db.exam.create({data:{...d,instructions:d.instructions||null}});await db.auditLog.create({data:{actorUserId:user.id,action:"EXAM_CREATED",entityType:"Exam",entityId:exam.id,metadata:{batchId:d.batchId}}});return NextResponse.json({exam},{status:201});
+ try{const d=examSchema.parse(await req.json());if(!d.batchId&&!d.courseId)throw new Error("Select a batch or course.");
+ const batch=d.batchId?await db.batch.findUnique({where:{id:d.batchId},select:{id:true}}):null;
+ const course=d.courseId?await db.course.findUnique({where:{id:d.courseId},select:{id:true}}):null;
+ if(d.batchId&&!batch)throw new Error("Batch not found."); if(d.courseId&&!course)throw new Error("Course not found.");
+ const exam=await db.exam.create({data:{...d,instructions:d.instructions||null}});await db.auditLog.create({data:{actorUserId:user.id,action:"EXAM_CREATED",entityType:"Exam",entityId:exam.id,metadata:{batchId:d.batchId||null,courseId:d.courseId||null}}});return NextResponse.json({exam},{status:201});
  }catch(e){return NextResponse.json({error:e?.message||"Unable to create exam."},{status:400});}
 }
