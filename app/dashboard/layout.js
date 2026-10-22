@@ -12,7 +12,7 @@ export default async function DashboardLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f9fc] text-slate-950">
+    <div className="erp-workspace min-h-screen text-slate-950">
       <ErpSidebar user={user} />
       <div className="min-h-screen lg:pl-[292px]">
         <ErpTopbar user={user} />
