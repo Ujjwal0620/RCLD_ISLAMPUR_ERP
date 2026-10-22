@@ -55,6 +55,11 @@ async function getCourses() {
 
 export default async function Home() {
   const courses = await getCourses();
+  let homeSlides = [];
+  try {
+    homeSlides = await db.homeSlide.findMany({ where: { active: true }, orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }], take: 3 });
+  } catch {}
+  homeSlides = homeSlides.map((slide) => ({ ...slide, createdAt: undefined, updatedAt: undefined }));
 
   const learnerFeatures = [
     [Target, "Clear learning paths", "Know exactly what to learn next."],
@@ -74,7 +79,7 @@ export default async function Home() {
     <main className="public-site min-h-screen">
       <PublicNavbar />
 
-      <HomeHeroSlider />
+      <HomeHeroSlider initialSlides={homeSlides} />
 
       <section className="public-section">
         <div className="mx-auto max-w-7xl px-6">
@@ -95,6 +100,7 @@ export default async function Home() {
                 key={course.code}
                 className="public-card group"
               >
+                {course.imageUrl && <div className="mb-5 h-40 rounded-2xl bg-cover bg-center" style={{backgroundImage: `linear-gradient(0deg,rgba(2,6,23,.42),rgba(2,6,23,.05)),url("${course.imageUrl}")`}} />}
                 <div className="flex items-center justify-between">
                   <span className="public-code">{course.code}</span>
                   <span className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 text-slate-400 transition group-hover:border-cyan-300/30 group-hover:text-cyan-300">
