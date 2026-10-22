@@ -99,12 +99,12 @@
 - [ ] Public admission/enquiry form
 - [x] Student master record
 - [x] Offline vs online student separation
-- [ ] Course selection
-- [ ] Admission fee configuration
-- [ ] Discount approval by Superadmin
-- [ ] Installment fee configuration
+- [x] Course selection
+- [x] Admission fee configuration
+- [x] Discount approval by Superadmin
+- [x] Installment fee configuration
 - [ ] Payment receipt generation
-- [ ] Batch assignment
+- [x] Batch assignment
 - [ ] Faculty assignment
 - [ ] Student transfer workflow
 - [ ] Dropout workflow
@@ -179,10 +179,10 @@
 
 ## 12. Finance & Payments
 
-- [ ] Fee ledger
-- [ ] Installment management
-- [ ] Cash payment
-- [ ] UPI/manual payment
+- [x] Fee ledger
+- [x] Installment management
+- [x] Cash payment
+- [x] UPI/manual payment
 - [ ] PhonePe
 - [x] Razorpay-ready abstraction
 - [ ] Refund workflow
@@ -269,6 +269,9 @@
 > Stabilization update (2026-10-22): fixed ERP topbar build syntax, migrated Next.js middleware to proxy, fixed the student login redirect loop, removed unnecessary forced-dynamic flags from shared dashboard/student shells, and added the Admissions operations workspace. Performance and operational ERP build now proceed before payment completion.
 
 1. [x] Verify enrollment/payment foundation in CI.\n2. [x] Build the first premium academic course/batch operations workspace.
+3. [x] Separate offline students, online students and employees into dedicated operational pages.
+4. [x] Add real offline admission-to-fee-ledger transaction foundation and payment validation.
+5. [ ] Apply and verify the new Prisma fee schema on the production Neon database.
 3. [x] Record the verified enrollment/payment foundation restore point.
 4. [x] Build pending online enrollment state.
 5. [x] Add PhonePe/Razorpay-ready payment provider abstraction and configuration checks.
