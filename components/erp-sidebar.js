@@ -16,7 +16,7 @@ const groups=[
 {href:"/dashboard/admin/exams",label:"Exams & Results",icon:ClipboardCheck,permission:"exams.view"},
 {href:"/dashboard/admin/certificates",label:"Certificates",icon:Award,permission:"certificates.issue"}]},
 {label:"People & CRM",items:[
-{href:"/dashboard/admin/employees",label:"Employees",icon:UserCog,permission:"employees.manage"},{href:"/dashboard/admin/users",label:"Users & Access",icon:ShieldCheck,permission:"employees.manage"},
+{href:"/dashboard/admin/employees",label:"Employees",icon:UserCog,permission:"employees.manage"},{href:"/dashboard/admin/attendance/employee",label:"Employee Attendance",icon:CalendarCheck2,permission:"employees.view"},{href:"/dashboard/admin/users",label:"Users & Access",icon:ShieldCheck,permission:"employees.manage"},
 {href:"/dashboard/admin/crm",label:"CRM & Follow-ups",icon:ContactRound,permission:"crm.view"},
 {href:"/dashboard/admin/communication",label:"Communication",icon:Megaphone,permission:"dashboard.view"}]},
 {label:"Finance & Operations",items:[
