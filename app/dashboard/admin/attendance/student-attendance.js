@@ -14,10 +14,8 @@ export default function StudentAttendance({batches,canManage}){
  const batch=useMemo(()=>batches.find(b=>b.id===batchId),[batches,batchId]);
 
  useEffect(()=>{if(!batchId)return; (async()=>{setBusy(true);setMessage("");try{
-  const er=await fetch("/api/admin/attendance/students?batchId="+encodeURIComponent(batchId));
-  const d=await er.json();
-  const rows=await fetch("/api/admin/students?batchId="+encodeURIComponent(batchId));
-  if(!rows.ok) throw new Error(d.error||"Unable to load attendance.");
+  const rows=await fetch("/api/admin/attendance/students?batchId="+encodeURIComponent(batchId));
+  if(!rows.ok) throw new Error("Unable to load learners.");
   const data=await rows.json();
   setStudents(data.students||[]);
   const ar=await fetch("/api/admin/attendance/students?batchId="+encodeURIComponent(batchId)+"&date="+date);
