@@ -1,38 +1,8 @@
+"use client";
 import Link from "next/link";
-import { BookOpen, ChevronDown, GraduationCap, HelpCircle, Info, LayoutDashboard, Menu, Sparkles } from "lucide-react";
+import {usePathname} from "next/navigation";
+import {ArrowRight,BookOpen,GraduationCap,Menu,X} from "lucide-react";
+import {useState} from "react";
 
-export default function PublicNavbar() {
-  return <header className="sticky top-0 z-50 px-4 pt-3 sm:px-6">
-    <div className="glass-nav mx-auto flex max-w-7xl items-center justify-between rounded-2xl px-4 py-3 sm:px-5">
-      <Link href="/" className="flex items-center gap-3">
-        <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 text-white shadow-lg"><GraduationCap size={21}/></span>
-        <span><span className="block text-lg font-black tracking-tight text-slate-950">RCLD <span className="text-blue-600">Islampur</span></span><span className="hidden text-[10px] font-bold uppercase tracking-[.18em] text-slate-500 sm:block">Learn • Practice • Grow</span></span>
-      </Link>
-      <nav className="hidden items-center gap-1 lg:flex">
-        <Link className="rounded-xl px-4 py-2 text-sm font-bold text-slate-700 hover:bg-white/70" href="/">Home</Link>
-        <div className="group relative">
-          <button className="flex items-center gap-1 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 hover:bg-white/70">Explore <ChevronDown size={15}/></button>
-          <div className="invisible absolute left-0 top-full w-72 pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100">
-            <div className="glass-strong rounded-2xl p-3">
-              <Link href="/courses" className="flex gap-3 rounded-xl p-3 hover:bg-blue-50"><BookOpen className="text-blue-600"/><span><b className="block">All Courses</b><small className="text-slate-500">Explore programs & curriculum</small></span></Link>
-              <Link href="/learning" className="flex gap-3 rounded-xl p-3 hover:bg-blue-50"><Sparkles className="text-blue-600"/><span><b className="block">How Learning Works</b><small className="text-slate-500">Understand the online experience</small></span></Link>
-            </div>
-          </div>
-        </div>
-        <Link className="rounded-xl px-4 py-2 text-sm font-bold text-slate-700 hover:bg-white/70" href="/about">About</Link>
-        <Link className="rounded-xl px-4 py-2 text-sm font-bold text-slate-700 hover:bg-white/70" href="/faq">FAQ</Link>
-        <Link className="rounded-xl px-4 py-2 text-sm font-bold text-slate-700 hover:bg-white/70" href="/contact">Contact</Link>
-      </nav>
-      <div className="flex items-center gap-2">
-        <Link href="/student/login" className="hidden rounded-xl border border-slate-200 bg-white/70 px-4 py-2 text-sm font-bold text-slate-700 sm:block">Student Login</Link>
-        <Link href="/courses" className="rounded-xl bg-slate-950 px-4 py-2.5 text-sm font-black text-white shadow-lg shadow-slate-900/10">Explore Courses</Link>
-        <details className="relative lg:hidden">
-          <summary className="grid h-10 w-10 cursor-pointer list-none place-items-center rounded-xl border border-slate-200 bg-white/70"><Menu size={20}/></summary>
-          <div className="glass-strong absolute right-0 top-12 w-64 rounded-2xl p-3">
-            {[["Home","/"],["Courses","/courses"],["How Learning Works","/learning"],["About","/about"],["FAQ","/faq"],["Contact","/contact"],["Student Login","/student/login"]].map(([label,href])=><Link key={href} href={href} className="block rounded-xl px-4 py-3 text-sm font-bold hover:bg-blue-50">{label}</Link>)}
-          </div>
-        </details>
-      </div>
-    </div>
-  </header>;
-}
+const links=[["Home","/"],["Courses","/courses"],["Learning","/learning"],["About","/about"],["FAQ","/faq"],["Contact","/contact"]];
+export default function PublicNavbar(){const path=usePathname();const[open,setOpen]=useState(false);return <header className="sticky top-0 z-50 px-3 pt-3 sm:px-6"><div className="public-nav mx-auto flex max-w-7xl items-center justify-between rounded-2xl px-4 py-3 sm:px-5"><Link href="/" className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-cyan-300 to-blue-500 text-slate-950 shadow-lg shadow-cyan-500/15"><GraduationCap size={21}/></span><span><span className="block text-[15px] font-black tracking-tight text-white">RCLD <span className="text-cyan-300">Islampur</span></span><span className="hidden text-[9px] font-black uppercase tracking-[.22em] text-slate-500 sm:block">Learn · Practice · Grow</span></span></Link><nav className="hidden items-center gap-1 lg:flex">{links.map(([label,href])=><Link key={href} href={href} className={"rounded-xl px-3.5 py-2 text-xs font-black transition "+(path===href?"bg-white/10 text-cyan-200":"text-slate-400 hover:bg-white/[.06] hover:text-white")}>{label}</Link>)}</nav><div className="flex items-center gap-2"><Link href="/student/login" className="hidden rounded-xl border border-white/10 px-4 py-2 text-xs font-black text-slate-300 transition hover:bg-white/[.06] sm:block">Student Login</Link><Link href="/courses" className="hidden items-center gap-2 rounded-xl bg-cyan-300 px-4 py-2.5 text-xs font-black text-slate-950 shadow-lg shadow-cyan-950/20 sm:inline-flex">Explore Courses <ArrowRight size={14}/></Link><button onClick={()=>setOpen(!open)} aria-label="Toggle menu" className="grid h-10 w-10 place-items-center rounded-xl border border-white/10 text-white lg:hidden">{open?<X size={19}/>:<Menu size={19}/>}</button></div></div>{open&&<div className="public-nav mx-auto mt-2 max-w-7xl rounded-2xl p-3 lg:hidden">{links.map(([label,href])=><Link onClick={()=>setOpen(false)} key={href} href={href} className="flex items-center justify-between rounded-xl px-4 py-3 text-sm font-black text-slate-300 hover:bg-white/[.06]">{label}{href==="/courses"&&<BookOpen size={16}/>}</Link>)}<Link href="/student/login" className="mt-2 block rounded-xl bg-cyan-300 px-4 py-3 text-center text-sm font-black text-slate-950">Student Login</Link></div>}</header>}
