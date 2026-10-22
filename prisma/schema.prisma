@@ -208,6 +208,7 @@ model Course {
   onlinePublished  Boolean            @default(true)
   batches          Batch[]
   modules          CourseModule[]
+  exams             Exam[]
   onlineEnrollments OnlineEnrollment[]
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
@@ -252,7 +253,8 @@ model BatchEnrollment {
 
 model Exam {
   id                String          @id @default(cuid())
-  batchId           String
+  batchId           String?
+  courseId          String?
   title             String
   instructions      String?
   durationMinutes   Int             @default(30)
@@ -263,12 +265,14 @@ model Exam {
   published         Boolean         @default(false)
   startsAt          DateTime?
   endsAt            DateTime?
-  batch             Batch           @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  batch             Batch?          @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  course            Course?         @relation(fields: [courseId], references: [id], onDelete: Cascade)
   questions         ExamQuestion[]
   attempts          ExamAttempt[]
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   @@index([batchId, published])
+  @@index([courseId, published])
 }
 
 model ExamQuestion {
