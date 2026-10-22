@@ -22,6 +22,8 @@ export async function POST(req){
  if(!user||!hasPermission(user,"students.manage")) return NextResponse.json({error:"Forbidden"},{status:403});
  try{
   const d=schema.parse(await req.json());
+  const isSuperadmin=user.userRoles?.some(a=>a.role.name==="SUPERADMIN");
+  if(d.discountAmount>0 && !isSuperadmin) return NextResponse.json({error:"Only Superadmin can apply admission discounts."},{status:403});
   const result=await db.$transaction(async tx=>{
    let student;
    if(d.studentId) student=await tx.student.findUnique({where:{id:d.studentId}});
