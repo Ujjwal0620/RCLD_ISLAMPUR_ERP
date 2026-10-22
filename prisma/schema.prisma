@@ -67,6 +67,13 @@ enum PaymentMethod {
   OTHER
 }
 
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+}
+
 enum PaymentStatus {
   PENDING
   PAID
@@ -86,6 +93,7 @@ model User {
   student      Student?
   auditLogs    AuditLog[]   @relation("ActorAudit")
   batchTransfers BatchTransfer[]
+  recordedAttendances StudentAttendance[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 }
@@ -193,6 +201,7 @@ model Batch {
   endsAt      DateTime?
   course      Course             @relation(fields: [courseId], references: [id])
   enrollments BatchEnrollment[]
+  attendances StudentAttendance[]
   faculties   BatchFaculty[]
   transfersFrom BatchTransfer[] @relation("TransferFromBatch")
   transfersTo   BatchTransfer[] @relation("TransferToBatch")
@@ -215,6 +224,25 @@ model BatchEnrollment {
   @@unique([studentId, batchId])
   @@index([studentId])
   @@index([batchId])
+}
+
+model StudentAttendance {
+  id           String           @id @default(cuid())
+  batchId      String
+  studentId    String
+  attendanceDate DateTime       @db.Date
+  status       AttendanceStatus @default(PRESENT)
+  note         String?
+  recordedById String?
+  batch        Batch            @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  student      Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  recordedBy   User?            @relation(fields: [recordedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([batchId, studentId, attendanceDate])
+  @@index([batchId, attendanceDate])
+  @@index([studentId, attendanceDate])
 }
 
 model BatchFaculty {
