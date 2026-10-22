@@ -1,0 +1,2 @@
+"use client";
+export default function StudentError({reset}){return <main className="grid min-h-[70vh] place-items-center p-5"><section className="rounded-[28px] border border-slate-200 bg-white p-8 text-center shadow-xl"><h1 className="text-2xl font-black">Student portal needs a retry</h1><p className="mt-2 text-sm text-slate-500">The page did not load correctly. Your learning data is not lost.</p><button onClick={()=>reset()} className="mt-5 rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white">Reload workspace</button></section></main>}
