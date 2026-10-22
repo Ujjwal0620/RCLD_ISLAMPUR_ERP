@@ -165,7 +165,6 @@ model Employee {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   batchFaculties BatchFaculty[]
   attendances EmployeeAttendance[]
-  examAttempts ExamAttempt[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -185,6 +184,7 @@ model Student {
   onlineEnrollments OnlineEnrollment[]
   feeLedgers       FeeLedger[]
   lessonProgress   LessonProgress[]
+  examAttempts     ExamAttempt[]
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 }
