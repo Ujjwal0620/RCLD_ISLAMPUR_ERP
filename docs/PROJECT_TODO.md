@@ -41,7 +41,7 @@
 - [x] SEO metadata
 - [x] Sitemap
 - [x] Robots configuration
-- [ ] Final responsive/mobile UX pass\n- [x] ERP loading/error resilience states
+- [x] Final responsive/mobile UX pass\n- [x] ERP loading/error resilience states
 - [ ] Final SEO/GEO content pass
 - [ ] Public enquiry/lead capture integration
 
@@ -270,7 +270,7 @@
 - [x] Premium certificate operations UI
 - [x] Dark premium ERP and student authentication experiences
 - [x] Public credential verification dark experience
-- [ ] Complete public website dark/premium visual pass
+- [x] Complete public website dark/premium visual pass
 - [ ] Complete ERP module-by-module visual consistency pass
 - [ ] Complete student portal visual consistency pass
 - [ ] Accessibility, keyboard and responsive polish pass
