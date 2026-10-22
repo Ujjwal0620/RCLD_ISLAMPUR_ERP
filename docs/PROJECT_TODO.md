@@ -135,16 +135,16 @@
 
 ## 8. Exams & Results
 
-- [ ] Exam creation
-- [ ] MCQ questions
-- [ ] Descriptive questions
-- [ ] Negative marking configuration
-- [ ] Exam timer
-- [ ] Pass-mark configuration
-- [ ] Retake rules
-- [ ] Automatic result calculation
-- [ ] Result publishing
-- [ ] Result reports
+- [x] Exam creation
+- [x] MCQ questions
+- [x] Descriptive questions
+- [x] Negative marking configuration
+- [x] Exam timer
+- [x] Pass-mark configuration
+- [x] Retake rules
+- [x] Automatic result calculation
+- [x] Result publishing
+- [x] Result reports
 
 ## 9. Certificates
 
@@ -288,7 +288,7 @@
 18. [x] Build faculty assignment and batch transfer workflow.
 19. [x] Build manual student attendance and reports.
 20. [x] Build employee attendance and evidence workflow.
-21. [ ] Build exams/results.
+21. [x] Build exams/results.
 22. [ ] Build certificates and public QR verification.
 23. [ ] Build CRM lead/follow-up/conversion workflow.
 24. [ ] Build communication, inventory, payroll and leave modules.
