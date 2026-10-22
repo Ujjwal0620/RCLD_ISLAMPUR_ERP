@@ -544,3 +544,24 @@ model SystemSetting {
   value     Json
   updatedAt DateTime @updatedAt
 }
+
+
+model HomeSlide {
+  id              String   @id @default(cuid())
+  eyebrow         String?
+  title           String
+  accent          String?
+  description     String?
+  imageUrl        String
+  primaryLabel    String?
+  primaryHref     String?
+  secondaryLabel  String?
+  secondaryHref   String?
+  statLabel       String?
+  sortOrder       Int      @default(0)
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([active, sortOrder])
+}
