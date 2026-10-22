@@ -42,6 +42,31 @@ enum EnrollmentStatus {
   CANCELLED
 }
 
+enum FeeLedgerStatus {
+  PENDING
+  PARTIAL
+  PAID
+  CANCELLED
+}
+
+enum InstallmentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  BANK_TRANSFER
+  CARD
+  PHONEPE
+  RAZORPAY
+  OTHER
+}
+
 enum PaymentStatus {
   PENDING
   PAID
@@ -125,6 +150,7 @@ model Student {
   user             User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
   enrollments      BatchEnrollment[]
   onlineEnrollments OnlineEnrollment[]
+  feeLedgers       FeeLedger[]
   lessonProgress   LessonProgress[]
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
@@ -178,9 +204,65 @@ model BatchEnrollment {
   active    Boolean  @default(true)
   student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   batch     Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  feeLedger FeeLedger?
 
+  @@unique([studentId, batchId])
   @@index([studentId])
   @@index([batchId])
+}
+
+model FeeLedger {
+  id                String           @id @default(cuid())
+  studentId         String
+  batchEnrollmentId String           @unique
+  courseFee         Decimal          @db.Decimal(12,2)
+  discountAmount    Decimal          @default(0) @db.Decimal(12,2)
+  finalAmount       Decimal          @db.Decimal(12,2)
+  paidAmount        Decimal          @default(0) @db.Decimal(12,2)
+  balanceAmount     Decimal          @db.Decimal(12,2)
+  status            FeeLedgerStatus  @default(PENDING)
+  student           Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  batchEnrollment   BatchEnrollment  @relation(fields: [batchEnrollmentId], references: [id], onDelete: Cascade)
+  installments      FeeInstallment[]
+  payments          FeePayment[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([studentId])
+}
+
+model FeeInstallment {
+  id           String      @id @default(cuid())
+  feeLedgerId  String
+  installmentNo Int
+  dueDate      DateTime?
+  amount       Decimal     @db.Decimal(12,2)
+  paidAmount   Decimal    @default(0) @db.Decimal(12,2)
+  status       InstallmentStatus @default(PENDING)
+  feeLedger    FeeLedger   @relation(fields: [feeLedgerId], references: [id], onDelete: Cascade)
+  payments     FeePayment[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([feeLedgerId, installmentNo])
+  @@index([dueDate])
+}
+
+model FeePayment {
+  id             String        @id @default(cuid())
+  feeLedgerId    String
+  installmentId  String?
+  amount         Decimal       @db.Decimal(12,2)
+  method         PaymentMethod
+  reference      String?
+  status         PaymentStatus @default(PENDING)
+  paidAt         DateTime?
+  feeLedger      FeeLedger      @relation(fields: [feeLedgerId], references: [id], onDelete: Cascade)
+  installment    FeeInstallment? @relation(fields: [installmentId], references: [id], onDelete: SetNull)
+  createdAt      DateTime       @default(now())
+
+  @@index([feeLedgerId])
+  @@index([reference])
 }
 
 model OnlineEnrollment {
