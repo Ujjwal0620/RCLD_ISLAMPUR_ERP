@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
 import { db } from "@/lib/db";
 import BatchForm from "./batch-form";
+import BatchOperations from "./batch-operations";
 
 const statusMap = {
   PLANNED: ["Planned","bg-amber-50 text-amber-700"],
@@ -18,14 +19,15 @@ export default async function BatchesPage() {
   if (!user) redirect("/login");
   if (!hasPermission(user, "batches.view")) redirect("/dashboard");
 
-  const [batches, courses, totalStudents] = await Promise.all([
+  const [batches, courses, totalStudents, employees] = await Promise.all([
     db.batch.findMany({
       orderBy: [{ status: "asc" }, { startsAt: "desc" }],
-      include: { course: { select: { code: true, name: true } }, _count: { select: { enrollments: true } } },
+      include: { course: { select: { code: true, name: true } }, _count: { select: { enrollments: true } }, faculties: { include: { employee: { include: { user: { select: { name: true } } } } } }, enrollments: { where: { active: true }, select: { id: true, student: { select: { name: true, registrationNo: true } } }, take: 100 } },
       take: 100,
     }),
     db.course.findMany({ where: { active: true }, orderBy: { code: "asc" }, select: { id: true, code: true, name: true } }),
     db.batchEnrollment.count({ where: { active: true } }),
+    db.employee.findMany({ where: { user: { status: "ACTIVE" } }, orderBy: { employeeCode: "asc" }, select: { id: true, employeeCode: true, designation: true, user: { select: { name: true } } } }),
   ]);
 
   const active = batches.filter((b) => b.status === "ACTIVE").length;
@@ -77,6 +79,7 @@ export default async function BatchesPage() {
                     </div>
                     <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500" style={{width: percent+"%"}}/></div>
                     <div className="mt-3 flex items-center justify-between text-[10px] font-bold text-slate-400"><span>{percent}% capacity</span><span className="inline-flex items-center gap-1 group-hover:text-blue-600">Manage <ArrowUpRight size={12}/></span></div>
+                    {hasPermission(user,"batches.manage") && <BatchOperations batch={{id:batch.id,name:batch.name,faculty:batch.faculties.map(f=>({id:f.employee.id,name:f.employee.user.name,employeeCode:f.employee.employeeCode})),enrollments:batch.enrollments.map(e=>({id:e.id,name:e.student.name,registrationNo:e.student.registrationNo}))}} employees={employees}/>}
                   </article>
                 );
               })}
