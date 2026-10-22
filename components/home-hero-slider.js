@@ -56,23 +56,24 @@ const slides = [
   },
 ];
 
-export default function HomeHeroSlider() {
+export default function HomeHeroSlider({ initialSlides = [] }) {
+  const displaySlides = initialSlides.length ? initialSlides : slides;
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setActive((current) => (current + 1) % slides.length);
+      setActive((current) => (current + 1) % displaySlides.length);
     }, 5500);
     return () => clearInterval(timer);
   }, []);
 
   const move = (direction) => {
-    setActive((current) => (current + direction + slides.length) % slides.length);
+    setActive((current) => (current + direction + displaySlides.length) % displaySlides.length);
   };
 
   return (
     <section className="home-slider" aria-label="RCLD highlights">
-      {slides.map((slide, index) => {
+      {displaySlides.map((slide, index) => {
         const Icon = slide.icon;
         return (
           <article
@@ -103,18 +104,18 @@ export default function HomeHeroSlider() {
                 </p>
 
                 <div className="mt-9 flex flex-wrap gap-3">
-                  <Link href={slide.primaryHref} className="public-btn-primary">
-                    {slide.primary} <ArrowRight size={17} />
+                  <Link href={slide.primaryHref || "/courses"} className="public-btn-primary">
+                    {slide.primary || slide.primaryLabel || "Explore courses"} <ArrowRight size={17} />
                   </Link>
-                  <Link href={slide.secondaryHref} className="public-btn-secondary">
-                    {slide.secondary}
+                  <Link href={slide.secondaryHref || "/student/login"} className="public-btn-secondary">
+                    {slide.secondary || slide.secondaryLabel || "Student login"}
                   </Link>
                 </div>
 
                 <div className="mt-10 grid max-w-2xl gap-3 sm:grid-cols-3">
                   <div className="home-slide-panel">
-                    <Icon size={19} className="text-cyan-300" />
-                    <p className="mt-3 text-sm font-black text-white">{slide.stat}</p>
+                    {Icon ? <Icon size={19} className="text-cyan-300" /> : <GraduationCap size={19} className="text-cyan-300" />}
+                    <p className="mt-3 text-sm font-black text-white">{slide.stat || slide.statLabel || "Career-ready learning"}</p>
                   </div>
                   <div className="home-slide-panel">
                     <BookOpen size={19} className="text-cyan-300" />
@@ -139,7 +140,7 @@ export default function HomeHeroSlider() {
       </button>
 
       <div className="home-slider-dots">
-        {slides.map((slide, index) => (
+        {displaySlides.map((slide, index) => (
           <button
             key={slide.title}
             type="button"
