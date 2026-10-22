@@ -11,7 +11,7 @@
 - [x] Add a master checkbox-based build tracker
 - [ ] Add a restore point after every major verified build
 - [ ] Keep database migration history aligned with application releases
-- [ ] Add automated production-readiness checks to CI
+- [x] Add automated production-readiness checks to CI
 - [ ] Add release/changelog documentation for every major milestone
 
 ## 1. Foundation & Security
@@ -26,7 +26,7 @@
 - [x] Audit logging foundation
 - [ ] Complete security hardening and authorization review
 - [ ] Add rate limiting for authentication and sensitive APIs
-- [ ] Add security headers and production configuration review
+- [x] Add security headers and production configuration review
 
 ## 2. Public Website
 
@@ -41,7 +41,7 @@
 - [x] SEO metadata
 - [x] Sitemap
 - [x] Robots configuration
-- [ ] Final responsive/mobile UX pass
+- [ ] Final responsive/mobile UX pass\n- [x] ERP loading/error resilience states
 - [ ] Final SEO/GEO content pass
 - [ ] Public enquiry/lead capture integration
 
@@ -223,7 +223,7 @@
 
 ## 16. AI Features
 
-- [ ] AI tutor restricted to enrolled course/syllabus
+- [x] Workspace AI assistant foundation across ERP sections\n- [ ] AI tutor restricted to enrolled course/syllabus
 - [ ] Faculty knowledge ingestion
 - [ ] Admin knowledge ingestion
 - [ ] Employee assistant
@@ -272,15 +272,15 @@
 3. [x] Separate offline students, online students and employees into dedicated operational pages.
 4. [x] Add real offline admission-to-fee-ledger transaction foundation and payment validation.
 5. [ ] Apply and verify the new Prisma fee schema on the production Neon database.
-3. [x] Record the verified enrollment/payment foundation restore point.
-4. [x] Build pending online enrollment state.
-5. [x] Add PhonePe/Razorpay-ready payment provider abstraction and configuration checks.
-6. [ ] Implement PhonePe checkout creation using the current official API.
+12. [x] Record the verified enrollment/payment foundation restore point.
+13. [x] Build pending online enrollment state.
+14. [x] Add PhonePe/Razorpay-ready payment provider abstraction and configuration checks.
+15. [ ] Implement PhonePe checkout creation using the current official API.
 7. [ ] Implement payment callback/webhook verification.
 8. [ ] Activate enrollment only after verified payment.
 9. [ ] Add payment failure/retry handling.
-10. [ ] Add enrollment/payment student UI.
-11. [ ] Verify CI and record the next restore point.
+19. [ ] Add enrollment/payment student UI.
+20. [ ] Verify CI/Vercel and promote the next restore point.
 
 ## Restore Point Policy
 
