@@ -1,2 +1,77 @@
-import Link from "next/link";import {redirect} from "next/navigation";import {BookOpen,PlayCircle,ArrowUpRight,CreditCard,CheckCircle2} from "lucide-react";import {getCurrentStudent} from "@/lib/student-auth";import {db} from "@/lib/db";export const dynamic="force-dynamic";
-export default async function StudentDashboard(){const student=await getCurrentStudent();if(!student)redirect("/student/login");const enrollments=await db.onlineEnrollment.findMany({where:{studentId:student.id},include:{course:true},orderBy:{enrolledAt:"desc"}});const active=enrollments.filter(e=>e.status==="ACTIVE").length;const pending=enrollments.filter(e=>e.status==="PENDING").length;return <main className="px-4 py-5 sm:px-6 lg:px-8 xl:px-10"><div className="mx-auto max-w-[1500px]"><header className="pl-12 lg:pl-0"><p className="text-xs font-black uppercase tracking-[.2em] text-blue-600">Student workspace</p><h1 className="mt-2 text-3xl font-black sm:text-4xl">Welcome back, {student.name.split(" ")[0]}.</h1><p className="mt-2 text-sm text-slate-500">Continue learning, monitor enrollments and manage your online courses.</p></header><section className="mt-6 grid gap-4 sm:grid-cols-3"><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p className="text-xs font-bold text-slate-500">My enrollments</p><p className="mt-2 text-3xl font-black">{enrollments.length}</p></div><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p className="text-xs font-bold text-slate-500">Active courses</p><p className="mt-2 text-3xl font-black">{active}</p></div><div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p className="text-xs font-bold text-slate-500">Pending payments</p><p className="mt-2 text-3xl font-black">{pending}</p></div></section><div className="mt-8 flex items-center justify-between"><div><h2 className="text-xl font-black">My learning</h2><p className="mt-1 text-sm text-slate-500">Your enrolled online courses.</p></div><Link href="/courses" className="text-sm font-black text-blue-600">Explore catalogue →</Link></div><section className="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">{enrollments.length?enrollments.map(e=><article key={e.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm"><div className="course-banner flex h-32 items-center justify-center"><BookOpen size={42} className="text-blue-600"/></div><div className="p-5"><div className="flex items-center justify-between"><span className="text-xs font-black text-blue-600">{e.course.code}</span><span className={"rounded-full px-2.5 py-1 text-[10px] font-black "+(e.paymentStatus==="PAID"?"bg-emerald-50 text-emerald-700":"bg-amber-50 text-amber-700")}>{e.paymentStatus}</span></div><h3 className="mt-2 text-lg font-black">{e.course.name}</h3><p className="mt-2 text-xs text-slate-500">Enrolled {new Date(e.enrolledAt).toLocaleDateString("en-IN")}</p>{e.status==="ACTIVE"?<Link href={"/student/courses/"+e.course.code.toLowerCase()} className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-black text-white">Continue learning <PlayCircle size={16}/></Link>:<Link href="/student/enrollments" className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-black text-white"><CreditCard size={16}/> Complete enrollment</Link>}</div></article>):<div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center sm:col-span-2 xl:col-span-3"><CheckCircle2 className="mx-auto text-blue-600" size={36}/><h3 className="mt-4 text-xl font-black">Start your learning journey</h3><p className="mt-2 text-sm text-slate-500">Browse the course catalogue and enroll in a course.</p><Link href="/courses" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white">Browse courses <ArrowUpRight size={16}/></Link></div>}</section></div></main>;}
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { BookOpen, PlayCircle, ArrowUpRight, CreditCard, CheckCircle2 } from "lucide-react";
+import { getCurrentStudent } from "@/lib/student-auth";
+import { db } from "@/lib/db";
+
+export default async function StudentDashboard() {
+  const student = await getCurrentStudent();
+  if (!student) redirect("/student/login");
+
+  const enrollments = await db.onlineEnrollment.findMany({
+    where: { studentId: student.id },
+    include: { course: true },
+    orderBy: { enrolledAt: "desc" },
+  });
+
+  const active = enrollments.filter((item) => item.status === "ACTIVE").length;
+  const pending = enrollments.filter((item) => item.status === "PENDING").length;
+
+  return (
+    <main className="px-4 py-5 sm:px-6 lg:px-8 xl:px-10">
+      <div className="mx-auto max-w-[1500px]">
+        <header className="pl-12 lg:pl-0">
+          <p className="text-xs font-black uppercase tracking-[.2em] text-blue-600">Student workspace</p>
+          <h1 className="mt-2 text-3xl font-black sm:text-4xl">Welcome back, {student.name.split(" ")[0]}.</h1>
+          <p className="mt-2 text-sm text-slate-500">Continue learning, monitor enrollments and manage your online courses.</p>
+        </header>
+
+        <section className="mt-6 grid gap-4 sm:grid-cols-3">
+          <Stat label="My enrollments" value={enrollments.length} />
+          <Stat label="Active courses" value={active} />
+          <Stat label="Pending payments" value={pending} />
+        </section>
+
+        <div className="mt-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-black">My learning</h2>
+            <p className="mt-1 text-sm text-slate-500">Your enrolled online courses.</p>
+          </div>
+          <Link href="/courses" className="text-sm font-black text-blue-600">Explore catalogue →</Link>
+        </div>
+
+        <section className="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {enrollments.length ? enrollments.map((enrollment) => (
+            <article key={enrollment.id} className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div className="course-banner flex h-32 items-center justify-center"><BookOpen size={42} className="text-blue-600" /></div>
+              <div className="p-5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-blue-600">{enrollment.course.code}</span>
+                  <span className={"rounded-full px-2.5 py-1 text-[10px] font-black " + (enrollment.paymentStatus === "PAID" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700")}>{enrollment.paymentStatus}</span>
+                </div>
+                <h3 className="mt-2 text-lg font-black">{enrollment.course.name}</h3>
+                <p className="mt-2 text-xs text-slate-500">Enrolled {new Date(enrollment.enrolledAt).toLocaleDateString("en-IN")}</p>
+                {enrollment.status === "ACTIVE" ? (
+                  <Link href={"/student/courses/" + enrollment.course.code.toLowerCase()} className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-black text-white">Continue learning <PlayCircle size={16} /></Link>
+                ) : (
+                  <Link href="/student/enrollments" className="mt-5 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-black text-white"><CreditCard size={16} /> Complete enrollment</Link>
+                )}
+              </div>
+            </article>
+          )) : (
+            <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center sm:col-span-2 xl:col-span-3">
+              <CheckCircle2 className="mx-auto text-blue-600" size={36} />
+              <h3 className="mt-4 text-xl font-black">Start your learning journey</h3>
+              <p className="mt-2 text-sm text-slate-500">Browse the course catalogue and enroll in a course.</p>
+              <Link href="/courses" className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-black text-white">Browse courses <ArrowUpRight size={16} /></Link>
+            </div>
+          )}
+        </section>
+      </div>
+    </main>
+  );
+}
+
+function Stat({ label, value }) {
+  return <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><p className="text-xs font-bold text-slate-500">{label}</p><p className="mt-2 text-3xl font-black">{value}</p></div>;
+}
