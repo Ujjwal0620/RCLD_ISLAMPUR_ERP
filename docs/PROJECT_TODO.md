@@ -97,8 +97,8 @@
 ## 5. Admission & Student ERP
 
 - [ ] Public admission/enquiry form
-- [ ] Student master record
-- [ ] Offline vs online student separation
+- [x] Student master record
+- [x] Offline vs online student separation
 - [ ] Course selection
 - [ ] Admission fee configuration
 - [ ] Discount approval by Superadmin
@@ -131,7 +131,7 @@
 - [ ] Employee attendance
 - [ ] Employee attendance location evidence
 - [ ] Employee attendance image evidence
-- [ ] No GPS/live tracking requirement
+- [x] No GPS/live tracking requirement
 
 ## 8. Exams & Results
 
@@ -265,6 +265,8 @@
 - [ ] Final production readiness checklist
 
 ## Current Build Queue
+
+> Stabilization update (2026-10-22): fixed ERP topbar build syntax, migrated Next.js middleware to proxy, fixed the student login redirect loop, removed unnecessary forced-dynamic flags from shared dashboard/student shells, and added the Admissions operations workspace. Performance and operational ERP build now proceed before payment completion.
 
 1. [x] Verify enrollment/payment foundation in CI.
 2. [x] Record the verified enrollment/payment foundation restore point.
