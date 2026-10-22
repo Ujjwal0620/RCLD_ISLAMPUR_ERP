@@ -103,7 +103,7 @@
 - [x] Admission fee configuration
 - [x] Discount approval by Superadmin
 - [x] Installment fee configuration
-- [ ] Payment receipt generation
+- [x] Payment receipt generation
 - [x] Batch assignment
 - [ ] Faculty assignment
 - [ ] Student transfer workflow
@@ -188,7 +188,7 @@
 - [ ] Refund workflow
 - [ ] Payment reconciliation
 - [ ] Financial reports
-- [ ] Receipts/invoices
+- [x] Receipts/invoices
 
 ## 13. Communication
 
@@ -284,7 +284,7 @@
 14. [ ] Implement payment callback/webhook verification.
 15. [ ] Activate online enrollment only after verified payment.
 16. [ ] Add payment failure/retry handling.
-17. [ ] Build fee collection UI and printable receipts.
+17. [x] Build fee collection UI and printable receipts.
 18. [ ] Build faculty assignment and batch transfer workflow.
 19. [ ] Build manual student attendance and reports.
 20. [ ] Build employee attendance and evidence workflow.
