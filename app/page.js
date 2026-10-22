@@ -16,6 +16,7 @@ import {
 import { db } from "@/lib/db";
 import PublicNavbar from "@/components/public-navbar";
 import PublicFooter from "@/components/public-footer";
+import HomeHeroSlider from "@/components/home-hero-slider";
 
 export const dynamic = "force-dynamic";
 
@@ -73,116 +74,7 @@ export default async function Home() {
     <main className="public-site min-h-screen">
       <PublicNavbar />
 
-      <section className="public-hero">
-        <div className="public-grid" />
-        <div className="public-orb public-orb-a" />
-        <div className="public-orb public-orb-b" />
-
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 pb-24 pt-16 lg:grid-cols-[1.08fr_.92fr] lg:items-center lg:pb-32 lg:pt-24">
-          <div>
-            <span className="public-pill">
-              <Sparkles size={14} />
-              Modern computer education · Islampur
-            </span>
-
-            <h1 className="mt-7 max-w-4xl text-5xl font-black leading-[.98] tracking-[-.055em] text-white sm:text-6xl lg:text-[5rem]">
-              Build digital skills.
-              <br />
-              <span className="public-gradient-text">Create your next move.</span>
-            </h1>
-
-            <p className="mt-7 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
-              Learn practical computer skills through structured courses, focused lessons,
-              resources, assessments and progress tracking in one modern learning platform.
-            </p>
-
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Link href="/courses" className="public-btn-primary">
-                Explore programs <ArrowRight size={17} />
-              </Link>
-              <Link href="/student/login" className="public-btn-secondary">
-                <PlayCircle size={17} />
-                Enter student portal
-              </Link>
-            </div>
-
-            <div className="mt-10 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4">
-              {[
-                ["10+", "Programs"],
-                ["Online", "Learning"],
-                ["Practical", "Curriculum"],
-                ["Secure", "Portal"],
-              ].map(([value, label]) => (
-                <div key={label} className="public-mini-stat">
-                  <p className="text-xl font-black text-white">{value}</p>
-                  <p className="mt-1 text-[10px] font-black uppercase tracking-[.16em] text-slate-400">
-                    {label}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="public-showcase">
-              <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-                <div className="flex gap-2">
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-[.2em] text-slate-400">
-                  RCLD Learning OS
-                </span>
-              </div>
-
-              <div className="p-5 sm:p-7">
-                <div className="rounded-[24px] border border-white/10 bg-gradient-to-br from-cyan-300/10 via-blue-500/[.08] to-indigo-500/10 p-6">
-                  <div className="flex items-center justify-between">
-                    <span className="grid h-12 w-12 place-items-center rounded-2xl bg-cyan-300 text-slate-950">
-                      <Code2 size={23} />
-                    </span>
-                    <span className="rounded-full border border-emerald-300/20 bg-emerald-300/[.08] px-3 py-1 text-[10px] font-black text-emerald-200">
-                      LEARNING ACTIVE
-                    </span>
-                  </div>
-
-                  <p className="mt-10 text-xs font-black uppercase tracking-[.2em] text-cyan-200">
-                    Your learning journey
-                  </p>
-                  <h2 className="mt-3 text-3xl font-black tracking-tight text-white sm:text-4xl">
-                    Learn. Practice.
-                    <br />
-                    Progress.
-                  </h2>
-
-                  <div className="mt-7 h-2 overflow-hidden rounded-full bg-white/10">
-                    <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-cyan-300 to-blue-500" />
-                  </div>
-
-                  <div className="mt-3 flex justify-between text-[10px] font-bold text-slate-400">
-                    <span>Structured path</span>
-                    <span>Progress tracked</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 grid grid-cols-3 gap-3">
-                  {[
-                    [BookOpen, "Courses"],
-                    [PlayCircle, "Lessons"],
-                    [CheckCircle2, "Results"],
-                  ].map(([Icon, label]) => (
-                    <div key={label} className="rounded-2xl border border-white/10 bg-white/[.04] p-4">
-                      <Icon size={18} className="text-cyan-300" />
-                      <p className="mt-2 text-xs font-black text-slate-200">{label}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HomeHeroSlider />
 
       <section className="public-section">
         <div className="mx-auto max-w-7xl px-6">
