@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {usePathname} from "next/navigation";
 import {useState} from "react";
-import {LayoutDashboard,GraduationCap,BookOpen,Layers3,CalendarCheck2,WalletCards,ClipboardCheck,Award,UserCog,ContactRound,Megaphone,BarChart3,Package,Banknote,BrainCircuit,ShieldCheck,Settings,FileSearch,ChevronDown,Menu,X,LogOut,Search,Sparkles} from "lucide-react";
+import {LayoutDashboard,GraduationCap,BookOpen,Layers3,CalendarCheck2,WalletCards,ClipboardCheck,Award,UserCog,ContactRound,Megaphone,BarChart3,Package,Banknote,BrainCircuit,ShieldCheck,Settings,FileSearch,ChevronDown,Menu,X,LogOut,Search,Sparkles,MonitorPlay} from "lucide-react";
 
 const groups=[
 {label:"Command",items:[{href:"/dashboard",label:"Overview",icon:LayoutDashboard}]},
