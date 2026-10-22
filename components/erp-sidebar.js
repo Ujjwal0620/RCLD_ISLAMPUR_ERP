@@ -13,7 +13,7 @@ const groups=[
 {href:"/dashboard/admin/courses",label:"Courses",icon:BookOpen,permission:"courses.manage"},
 {href:"/dashboard/admin/batches",label:"Batches",icon:Layers3,permission:"batches.view"},
 {href:"/dashboard/admin/attendance",label:"Attendance",icon:CalendarCheck2,permission:"students.view"},{href:"/dashboard/admin/attendance/reports",label:"Attendance Reports",icon:BarChart3,permission:"reports.view"},
-{href:"/dashboard/admin/exams",label:"Exams & Results",icon:ClipboardCheck,permission:"exams.view"},
+{href:"/dashboard/admin/exams",label:"Exams & Results",icon:ClipboardCheck,permission:"exams.view"},{href:"/dashboard/admin/exams/results",label:"Result Grading",icon:BarChart3,permission:"exams.view"},
 {href:"/dashboard/admin/certificates",label:"Certificates",icon:Award,permission:"certificates.issue"}]},
 {label:"People & CRM",items:[
 {href:"/dashboard/admin/employees",label:"Employees",icon:UserCog,permission:"employees.manage"},{href:"/dashboard/admin/attendance/employee",label:"Employee Attendance",icon:CalendarCheck2,permission:"employees.view"},{href:"/dashboard/admin/users",label:"Users & Access",icon:ShieldCheck,permission:"employees.manage"},
