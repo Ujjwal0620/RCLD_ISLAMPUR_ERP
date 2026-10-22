@@ -8,7 +8,7 @@ import {LayoutDashboard,GraduationCap,BookOpen,Layers3,CalendarCheck2,WalletCard
 const groups=[
 {label:"Command",items:[{href:"/dashboard",label:"Overview",icon:LayoutDashboard}]},
 {label:"Academic",items:[
-{href:"/dashboard/admin/students",label:"Student Master",icon:GraduationCap,permission:"students.view"},
+{href:"/dashboard/admin/students/offline",label:"Offline Students",icon:GraduationCap,permission:"students.view"},{href:"/dashboard/admin/students/online",label:"Online Students",icon:MonitorPlay,permission:"students.view"},
 {href:"/dashboard/admin/admissions",label:"Admissions & Enquiries",icon:ContactRound,permission:"crm.view"},
 {href:"/dashboard/admin/courses",label:"Courses",icon:BookOpen,permission:"courses.manage"},
 {href:"/dashboard/admin/batches",label:"Batches",icon:Layers3,permission:"batches.view"},
@@ -16,7 +16,7 @@ const groups=[
 {href:"/dashboard/admin/exams",label:"Exams & Results",icon:ClipboardCheck,permission:"exams.view"},
 {href:"/dashboard/admin/certificates",label:"Certificates",icon:Award,permission:"certificates.issue"}]},
 {label:"People & CRM",items:[
-{href:"/dashboard/admin/users",label:"Employees & Users",icon:UserCog,permission:"employees.manage"},
+{href:"/dashboard/admin/employees",label:"Employees",icon:UserCog,permission:"employees.manage"},{href:"/dashboard/admin/users",label:"Users & Access",icon:ShieldCheck,permission:"employees.manage"},
 {href:"/dashboard/admin/crm",label:"CRM & Follow-ups",icon:ContactRound,permission:"crm.view"},
 {href:"/dashboard/admin/communication",label:"Communication",icon:Megaphone,permission:"dashboard.view"}]},
 {label:"Finance & Operations",items:[
