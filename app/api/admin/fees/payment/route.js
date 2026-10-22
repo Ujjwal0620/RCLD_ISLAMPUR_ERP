@@ -16,7 +16,7 @@ export async function POST(req){
    if(!ledger) throw new Error("Fee ledger not found.");
    const balance=Number(ledger.balanceAmount);
    if(d.amount>balance) throw new Error("Payment exceeds the outstanding balance.");
-   const payment=await tx.feePayment.create({data:{feeLedgerId:ledger.id,installmentId:d.installmentId||null,amount:d.amount,method:d.method,reference:d.reference||null,status:"PAID",paidAt:new Date()}});
+   let inst=null;\n   if(d.installmentId){ inst=ledger.installments.find(x=>x.id===d.installmentId); if(!inst) throw new Error("Installment not found."); const instBalance=Number(inst.amount)-Number(inst.paidAmount); if(d.amount>instBalance) throw new Error("Payment exceeds the selected installment balance."); }\n   const payment=await tx.feePayment.create({data:{feeLedgerId:ledger.id,installmentId:d.installmentId||null,amount:d.amount,method:d.method,reference:d.reference||null,status:"PAID",paidAt:new Date()}});
    const paid=Number(ledger.paidAmount)+d.amount;
    const remaining=Math.max(0,Number(ledger.finalAmount)-paid);
    const status=remaining===0?"PAID":"PARTIAL";
