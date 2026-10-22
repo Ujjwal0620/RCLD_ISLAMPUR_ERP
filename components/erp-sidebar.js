@@ -30,6 +30,7 @@ const groups=[
 {label:"Administration",items:[
 {href:"/dashboard/admin/roles",label:"Roles & Permissions",icon:ShieldCheck,permission:"roles.manage"},
 {href:"/dashboard/admin/audit",label:"Audit Logs",icon:FileSearch,permission:"audit.view"},
+{href:"/dashboard/admin/homepage",label:"Homepage Content",icon:MonitorPlay,permission:"cms.edit"},
 {href:"/dashboard/admin/settings",label:"System Settings",icon:Settings,permission:"roles.manage"}]}];
 
 function allowed(item,user){if(!item.permission)return true;return user?.userRoles?.some(a=>a.role?.name==="SUPERADMIN"||a.role?.permissions?.some(p=>p.permission?.key===item.permission));}
