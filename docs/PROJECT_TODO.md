@@ -113,12 +113,12 @@
 ## 6. Courses & Batches
 
 - [x] Initial course catalogue
-- [ ] Course settings CRUD
+- [x] Course settings CRUD
 - [ ] Course fee management
 - [ ] Course eligibility management
 - [ ] Course duration management
-- [ ] Batch creation
-- [ ] Batch capacity management
+- [x] Batch creation
+- [x] Batch capacity management
 - [ ] Batch faculty assignment
 - [ ] Batch transfer workflow
 - [ ] Batch status management
@@ -268,16 +268,16 @@
 
 > Stabilization update (2026-10-22): fixed ERP topbar build syntax, migrated Next.js middleware to proxy, fixed the student login redirect loop, removed unnecessary forced-dynamic flags from shared dashboard/student shells, and added the Admissions operations workspace. Performance and operational ERP build now proceed before payment completion.
 
-1. [x] Verify enrollment/payment foundation in CI.
-2. [x] Record the verified enrollment/payment foundation restore point.
-3. [x] Build pending online enrollment state.
-4. [x] Add PhonePe/Razorpay-ready payment provider abstraction and configuration checks.
-5. [ ] Implement PhonePe checkout creation using the current official API.
-6. [ ] Implement payment callback/webhook verification.
-7. [ ] Activate enrollment only after verified payment.
-8. [ ] Add payment failure/retry handling.
-9. [ ] Add enrollment/payment student UI.
-10. [ ] Verify CI and record the next restore point.
+1. [x] Verify enrollment/payment foundation in CI.\n2. [x] Build the first premium academic course/batch operations workspace.
+3. [x] Record the verified enrollment/payment foundation restore point.
+4. [x] Build pending online enrollment state.
+5. [x] Add PhonePe/Razorpay-ready payment provider abstraction and configuration checks.
+6. [ ] Implement PhonePe checkout creation using the current official API.
+7. [ ] Implement payment callback/webhook verification.
+8. [ ] Activate enrollment only after verified payment.
+9. [ ] Add payment failure/retry handling.
+10. [ ] Add enrollment/payment student UI.
+11. [ ] Verify CI and record the next restore point.
 
 ## Restore Point Policy
 
