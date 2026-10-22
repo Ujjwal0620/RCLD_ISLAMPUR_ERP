@@ -33,6 +33,6 @@ export async function POST(req){
   for(const q of exam.questions){const marks=Number(q.marks);max+=marks;const answer=d.answers[q.id];if(q.type==="DESCRIPTIVE"){hasDescriptive=true;continue;}if(answer&&answer===q.correctAnswer)score+=marks;else if(answer&&exam.negativeMarking)score-=Number(exam.negativeMarks);}
   score=Math.max(0,score);const percentage=max?Math.round(score/max*10000)/100:0;const passed=!hasDescriptive&&score>=Number(exam.passMarks);
   const updated=await db.examAttempt.update({where:{id:attempt.id},data:{answers:d.answers,score,percentage,passed:hasDescriptive?null:passed,status:hasDescriptive?"SUBMITTED":"GRADED",submittedAt:new Date(),gradedAt:hasDescriptive?null:new Date()}});
-  return NextResponse.json({success:true,attempt:updated,requiresManualGrading:hasDescriptive});
+  return NextResponse.json({success:true,attempt:exam.resultsPublished?updated:{id:updated.id,status:updated.status},resultsPublished:exam.resultsPublished,requiresManualGrading:hasDescriptive});
  }catch(e){return NextResponse.json({error:e?.message||"Unable to process exam."},{status:400});}
 }
