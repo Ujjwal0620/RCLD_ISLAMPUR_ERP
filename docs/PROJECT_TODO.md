@@ -105,8 +105,8 @@
 - [x] Installment fee configuration
 - [x] Payment receipt generation
 - [x] Batch assignment
-- [ ] Faculty assignment
-- [ ] Student transfer workflow
+- [x] Faculty assignment
+- [x] Student transfer workflow
 - [ ] Dropout workflow
 - [ ] Student status lifecycle
 
@@ -125,8 +125,8 @@
 
 ## 7. Attendance
 
-- [ ] Manual student attendance
-- [ ] Attendance correction workflow
+- [x] Manual student attendance
+- [x] Attendance correction workflow
 - [ ] Attendance reports
 - [ ] Employee attendance
 - [ ] Employee attendance location evidence
@@ -285,7 +285,7 @@
 15. [ ] Activate online enrollment only after verified payment.
 16. [ ] Add payment failure/retry handling.
 17. [x] Build fee collection UI and printable receipts.
-18. [ ] Build faculty assignment and batch transfer workflow.
+18. [x] Build faculty assignment and batch transfer workflow.
 19. [ ] Build manual student attendance and reports.
 20. [ ] Build employee attendance and evidence workflow.
 21. [ ] Build exams/results.
