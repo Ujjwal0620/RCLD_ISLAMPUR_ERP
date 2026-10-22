@@ -263,6 +263,7 @@ model Exam {
   passMarks         Decimal         @default(40) @db.Decimal(8,2)
   maxAttempts       Int             @default(1)
   published         Boolean         @default(false)
+  resultsPublished  Boolean         @default(false)
   startsAt          DateTime?
   endsAt            DateTime?
   batch             Batch?          @relation(fields: [batchId], references: [id], onDelete: Cascade)
@@ -297,6 +298,7 @@ model ExamAttempt {
   attemptNo    Int
   status       ExamAttemptStatus @default(IN_PROGRESS)
   answers      Json?
+  grading      Json?
   score        Decimal?          @db.Decimal(10,2)
   percentage   Decimal?          @db.Decimal(6,2)
   passed       Boolean?
