@@ -159,6 +159,7 @@ model Student {
   status           StudentStatus      @default(ACTIVE)
   user             User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
   enrollments      BatchEnrollment[]
+  attendances      StudentAttendance[]
   onlineEnrollments OnlineEnrollment[]
   feeLedgers       FeeLedger[]
   lessonProgress   LessonProgress[]
