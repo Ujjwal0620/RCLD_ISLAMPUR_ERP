@@ -1,0 +1,1 @@
+export default function StudentLoading(){return <main className="min-h-screen animate-pulse bg-slate-50 p-5"><div className="mx-auto max-w-7xl space-y-5"><div className="h-44 rounded-[28px] bg-slate-200"/><div className="grid gap-4 md:grid-cols-3">{[1,2,3].map(i=><div key={i} className="h-32 rounded-2xl bg-slate-200"/>)}</div></div></main>}
