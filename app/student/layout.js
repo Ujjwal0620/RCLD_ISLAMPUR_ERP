@@ -1,1 +1,19 @@
-import {redirect} from "next/navigation";import {getCurrentStudent} from "@/lib/student-auth";import StudentSidebar from "@/components/student-sidebar";export const dynamic="force-dynamic";export default async function StudentLayout({children}){const student=await getCurrentStudent();if(!student)redirect("/student/login");return <div className="min-h-screen bg-slate-50 text-slate-950"><StudentSidebar student={student}/><div className="min-h-screen lg:pl-[270px]">{children}</div></div>;}
+import { getCurrentStudent } from "@/lib/student-auth";
+import StudentSidebar from "@/components/student-sidebar";
+
+export default async function StudentLayout({ children }) {
+  const student = await getCurrentStudent();
+
+  // Authentication pages must stay public. Only render the protected
+  // student shell when a valid student session exists.
+  if (!student) {
+    return children;
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-950">
+      <StudentSidebar student={student} />
+      <div className="min-h-screen lg:pl-[270px]">{children}</div>
+    </div>
+  );
+}
