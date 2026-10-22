@@ -127,10 +127,10 @@
 
 - [x] Manual student attendance
 - [x] Attendance correction workflow
-- [ ] Attendance reports
-- [ ] Employee attendance
-- [ ] Employee attendance location evidence
-- [ ] Employee attendance image evidence
+- [x] Attendance reports
+- [x] Employee attendance
+- [x] Employee attendance location evidence
+- [x] Employee attendance image evidence
 - [x] No GPS/live tracking requirement
 
 ## 8. Exams & Results
@@ -286,8 +286,8 @@
 16. [ ] Add payment failure/retry handling.
 17. [x] Build fee collection UI and printable receipts.
 18. [x] Build faculty assignment and batch transfer workflow.
-19. [ ] Build manual student attendance and reports.
-20. [ ] Build employee attendance and evidence workflow.
+19. [x] Build manual student attendance and reports.
+20. [x] Build employee attendance and evidence workflow.
 21. [ ] Build exams/results.
 22. [ ] Build certificates and public QR verification.
 23. [ ] Build CRM lead/follow-up/conversion workflow.
