@@ -67,6 +67,14 @@ enum PaymentMethod {
   OTHER
 }
 
+enum EmployeeAttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  HALF_DAY
+  ON_LEAVE
+}
+
 enum AttendanceStatus {
   PRESENT
   ABSENT
@@ -144,6 +152,7 @@ model Employee {
   joinedAt     DateTime?
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   batchFaculties BatchFaculty[]
+  attendances EmployeeAttendance[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -225,6 +234,25 @@ model BatchEnrollment {
   @@unique([studentId, batchId])
   @@index([studentId])
   @@index([batchId])
+}
+
+model EmployeeAttendance {
+  id                String                   @id @default(cuid())
+  employeeId        String
+  attendanceDate    DateTime                 @db.Date
+  status            EmployeeAttendanceStatus @default(PRESENT)
+  checkIn           DateTime?
+  checkOut          DateTime?
+  breakMinutes      Int                      @default(0)
+  locationEvidence  String?
+  imageEvidenceUrl  String?
+  note              String?
+  employee          Employee                 @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+
+  @@unique([employeeId, attendanceDate])
+  @@index([attendanceDate])
 }
 
 model StudentAttendance {
