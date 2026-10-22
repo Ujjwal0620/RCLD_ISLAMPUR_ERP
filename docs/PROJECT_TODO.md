@@ -149,12 +149,12 @@
 ## 9. Certificates
 
 - [ ] Certificate template management
-- [ ] Automatic certificate eligibility
-- [ ] Certificate number generation
-- [ ] QR verification
-- [ ] Public certificate verification page
-- [ ] Faculty certificate issuance workflow
-- [ ] Certificate download
+- [x] Automatic certificate eligibility
+- [x] Certificate number generation
+- [x] QR verification
+- [x] Public certificate verification page
+- [x] Faculty certificate issuance workflow
+- [x] Certificate download
 
 ## 10. Roles, Employees & Permissions
 
@@ -264,6 +264,17 @@
 - [ ] Restore/rollback drill
 - [ ] Final production readiness checklist
 
+## UI / Theme Modernization
+
+- [x] Premium ERP workspace theme primitives
+- [x] Premium certificate operations UI
+- [x] Dark premium ERP and student authentication experiences
+- [x] Public credential verification dark experience
+- [ ] Complete public website dark/premium visual pass
+- [ ] Complete ERP module-by-module visual consistency pass
+- [ ] Complete student portal visual consistency pass
+- [ ] Accessibility, keyboard and responsive polish pass
+
 ## Current Build Queue
 
 > Audit update (2026-10-22): current development remains on `main`. The latest audit identified and fixed a missing navigation icon import that could fail the Vercel build. Global ERP/student workspace assistant support, loading/error resilience, production headers and Prisma validation in CI have been added. Vercel verification is still pending.
@@ -289,7 +300,7 @@
 19. [x] Build manual student attendance and reports.
 20. [x] Build employee attendance and evidence workflow.
 21. [x] Build exams/results.
-22. [ ] Build certificates and public QR verification.
+22. [x] Build certificates and public QR verification.
 23. [ ] Build CRM lead/follow-up/conversion workflow.
 24. [ ] Build communication, inventory, payroll and leave modules.
 25. [ ] Build AI tutor knowledge restrictions, admin analytics and employee assistant workflows.
