@@ -79,7 +79,7 @@ export default async function BatchesPage() {
                     </div>
                     <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500" style={{width: percent+"%"}}/></div>
                     <div className="mt-3 flex items-center justify-between text-[10px] font-bold text-slate-400"><span>{percent}% capacity</span><span className="inline-flex items-center gap-1 group-hover:text-blue-600">Manage <ArrowUpRight size={12}/></span></div>
-                    {hasPermission(user,"batches.manage") && <BatchOperations batch={{id:batch.id,name:batch.name,faculty:batch.faculties.map(f=>({id:f.employee.id,name:f.employee.user.name,employeeCode:f.employee.employeeCode})),enrollments:batch.enrollments.map(e=>({id:e.id,name:e.student.name,registrationNo:e.student.registrationNo}))}} employees={employees}/>}
+                    {hasPermission(user,"batches.manage") && <BatchOperations batch={{id:batch.id,name:batch.name,faculty:batch.faculties.map(f=>({id:f.employee.id,name:f.employee.user.name,employeeCode:f.employee.employeeCode})),enrollments:batch.enrollments.map(e=>({id:e.id,name:e.student.name,registrationNo:e.student.registrationNo}))}} employees={employees} targetBatches={batches.map(b=>({id:b.id,code:b.code,name:b.name}))}/>}
                   </article>
                 );
               })}
