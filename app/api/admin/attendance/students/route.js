@@ -14,9 +14,11 @@ export async function GET(req){
  const user=await getCurrentUser();
  if(!user||!hasPermission(user,"students.view")) return NextResponse.json({error:"Forbidden"},{status:403});
  const {searchParams}=new URL(req.url); const batchId=searchParams.get("batchId"); const date=searchParams.get("date");
- if(!batchId||!date) return NextResponse.json({error:"batchId and date are required."},{status:400});
+ if(!batchId) return NextResponse.json({error:"batchId is required."},{status:400});
+ const enrollments=await db.batchEnrollment.findMany({where:{batchId,active:true},orderBy:{student:{name:"asc"}},select:{student:{select:{id:true,name:true,registrationNo:true,phone:true}}}});
+ if(!date) return NextResponse.json({students:enrollments.map(x=>x.student)});
  const rows=await db.studentAttendance.findMany({where:{batchId,attendanceDate:new Date(date+"T00:00:00.000Z")},select:{studentId:true,status:true,note:true}});
- return NextResponse.json({records:rows});
+ return NextResponse.json({students:enrollments.map(x=>x.student),records:rows});
 }
 
 export async function POST(req){
