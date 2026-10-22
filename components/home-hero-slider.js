@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -10,120 +10,156 @@ import {
   Code2,
   GraduationCap,
   Laptop,
-  PlayCircle,
+  Pause,
+  Play,
   Sparkles,
 } from "lucide-react";
 
-const slides = [
+const fallbackSlides = [
   {
-    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=2000&q=85",
+    imageUrl: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=2200&q=88",
     eyebrow: "RCLD Islampur · Skill Development",
     title: "Learn skills that move",
     accent: "your future forward.",
     description: "Modern computer education with structured learning, practical guidance and a digital student experience built around your progress.",
-    primary: "Explore courses",
+    primaryLabel: "Explore courses",
     primaryHref: "/courses",
-    secondary: "Student login",
+    secondaryLabel: "Student login",
     secondaryHref: "/student/login",
-    icon: GraduationCap,
-    stat: "Career-ready learning",
+    statLabel: "Career-ready learning",
   },
   {
-    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=2000&q=85",
+    imageUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=2200&q=88",
     eyebrow: "Learn · Practice · Progress",
     title: "Your classroom now has",
     accent: "a digital workspace.",
     description: "Access lessons, resources, assessments and progress from one focused learning portal—wherever your learning continues.",
-    primary: "Start learning",
+    primaryLabel: "Start learning",
     primaryHref: "/student/login",
-    secondary: "How it works",
+    secondaryLabel: "How it works",
     secondaryHref: "/learning",
-    icon: Laptop,
-    stat: "One connected platform",
+    statLabel: "One connected platform",
   },
   {
-    image: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=2000&q=85",
+    imageUrl: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=2200&q=88",
     eyebrow: "Practical Computer Education",
     title: "Turn curiosity into",
     accent: "real digital capability.",
     description: "From computer fundamentals and office skills to programming and professional digital tools, choose a path designed for useful outcomes.",
-    primary: "View programs",
+    primaryLabel: "View programs",
     primaryHref: "/courses",
-    secondary: "About RCLD",
+    secondaryLabel: "About RCLD",
     secondaryHref: "/about",
-    icon: Code2,
-    stat: "10+ focused programs",
+    statLabel: "10+ focused programs",
   },
 ];
 
+function normalize(slide) {
+  return {
+    ...slide,
+    imageUrl: slide.imageUrl || slide.image || "",
+    primaryLabel: slide.primaryLabel || slide.primary || "Explore courses",
+    secondaryLabel: slide.secondaryLabel || slide.secondary || "Student login",
+    statLabel: slide.statLabel || slide.stat || "Career-ready learning",
+  };
+}
+
 export default function HomeHeroSlider({ initialSlides = [] }) {
-  const displaySlides = initialSlides.length ? initialSlides : slides;
+  const displaySlides = useMemo(
+    () => (initialSlides.length ? initialSlides : fallbackSlides).slice(0, 3).map(normalize),
+    [initialSlides]
+  );
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setActive((current) => (current + 1) % displaySlides.length);
-    }, 5500);
-    return () => clearInterval(timer);
-  }, []);
+    setActive(0);
+  }, [displaySlides.length]);
+
+  const next = useCallback(() => {
+    setActive((current) => (current + 1) % displaySlides.length);
+  }, [displaySlides.length]);
+
+  useEffect(() => {
+    if (paused || displaySlides.length < 2) return undefined;
+    const timer = window.setInterval(next, 6000);
+    return () => window.clearInterval(timer);
+  }, [next, paused, displaySlides.length]);
 
   const move = (direction) => {
     setActive((current) => (current + direction + displaySlides.length) % displaySlides.length);
   };
 
   return (
-    <section className="home-slider" aria-label="RCLD highlights">
+    <section
+      className="home-slider"
+      aria-label="RCLD Islampur featured programs"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false);
+      }}
+    >
       {displaySlides.map((slide, index) => {
-        const Icon = slide.icon;
+        const activeSlide = index === active;
         return (
           <article
-            key={slide.title}
-            className={"home-slide " + (index === active ? "is-active" : "")}
-            aria-hidden={index !== active}
+            key={slide.id || slide.title || index}
+            className={"home-slide " + (activeSlide ? "is-active" : "")}
+            aria-hidden={!activeSlide}
           >
             <div
               className="home-slide-image"
-              style={{ backgroundImage: `url("${slide.image}")` }}
+              style={{ backgroundImage: `url("${slide.imageUrl}")` }}
+              aria-hidden="true"
             />
+            <div className="home-slide-shade" aria-hidden="true" />
 
-            <div className="home-slide-content mx-auto w-full max-w-7xl px-6 py-20">
-              <div className="max-w-3xl">
+            <div className="home-slide-content mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-14">
+              <div className="home-slide-copy">
                 <span className="public-pill">
                   <Sparkles size={14} />
-                  {slide.eyebrow}
+                  {slide.eyebrow || "RCLD Islampur · Skill Development"}
                 </span>
 
-                <h1 className="mt-7 text-5xl font-black leading-[.98] tracking-[-.055em] text-white sm:text-6xl lg:text-[5.25rem]">
+                <h1 className="home-slide-title">
                   {slide.title}
-                  <br />
-                  <span className="public-gradient-text">{slide.accent}</span>
+                  {slide.accent && (
+                    <>
+                      <br />
+                      <span className="public-gradient-text">{slide.accent}</span>
+                    </>
+                  )}
                 </h1>
 
-                <p className="mt-7 max-w-2xl text-base leading-8 text-slate-200 sm:text-lg">
-                  {slide.description}
-                </p>
+                {slide.description && (
+                  <p className="home-slide-description">{slide.description}</p>
+                )}
 
-                <div className="mt-9 flex flex-wrap gap-3">
+                <div className="mt-7 flex flex-wrap gap-3">
                   <Link href={slide.primaryHref || "/courses"} className="public-btn-primary">
-                    {slide.primary || slide.primaryLabel || "Explore courses"} <ArrowRight size={17} />
+                    {slide.primaryLabel} <ArrowRight size={17} />
                   </Link>
-                  <Link href={slide.secondaryHref || "/student/login"} className="public-btn-secondary">
-                    {slide.secondary || slide.secondaryLabel || "Student login"}
-                  </Link>
+                  {slide.secondaryLabel && (
+                    <Link href={slide.secondaryHref || "/student/login"} className="public-btn-secondary">
+                      {slide.secondaryLabel}
+                    </Link>
+                  )}
                 </div>
 
-                <div className="mt-10 grid max-w-2xl gap-3 sm:grid-cols-3">
+                <div className="mt-8 grid max-w-3xl gap-2.5 sm:grid-cols-3">
                   <div className="home-slide-panel">
-                    {Icon ? <Icon size={19} className="text-cyan-300" /> : <GraduationCap size={19} className="text-cyan-300" />}
-                    <p className="mt-3 text-sm font-black text-white">{slide.stat || slide.statLabel || "Career-ready learning"}</p>
+                    <GraduationCap size={18} className="text-cyan-300" />
+                    <div><p>{slide.statLabel}</p><span>Focused outcomes</span></div>
                   </div>
                   <div className="home-slide-panel">
-                    <BookOpen size={19} className="text-cyan-300" />
-                    <p className="mt-3 text-sm font-black text-white">Structured courses</p>
+                    <BookOpen size={18} className="text-cyan-300" />
+                    <div><p>Structured courses</p><span>Learn step by step</span></div>
                   </div>
                   <div className="home-slide-panel">
-                    <CheckCircle2 size={19} className="text-cyan-300" />
-                    <p className="mt-3 text-sm font-black text-white">Progress & assessments</p>
+                    <CheckCircle2 size={18} className="text-cyan-300" />
+                    <div><p>Progress tracking</p><span>See your growth</span></div>
                   </div>
                 </div>
               </div>
@@ -132,24 +168,40 @@ export default function HomeHeroSlider({ initialSlides = [] }) {
         );
       })}
 
-      <button type="button" className="home-slider-arrow prev" onClick={() => move(-1)} aria-label="Previous slide">
-        <ArrowLeft size={18} />
-      </button>
-      <button type="button" className="home-slider-arrow next" onClick={() => move(1)} aria-label="Next slide">
-        <ArrowRight size={18} />
-      </button>
+      {displaySlides.length > 1 && (
+        <>
+          <button type="button" className="home-slider-arrow prev" onClick={() => move(-1)} aria-label="Previous banner">
+            <ArrowLeft size={18} />
+          </button>
+          <button type="button" className="home-slider-arrow next" onClick={() => move(1)} aria-label="Next banner">
+            <ArrowRight size={18} />
+          </button>
 
-      <div className="home-slider-dots">
-        {displaySlides.map((slide, index) => (
-          <button
-            key={slide.title}
-            type="button"
-            className={"home-slider-dot " + (index === active ? "is-active" : "")}
-            onClick={() => setActive(index)}
-            aria-label={"Go to slide " + (index + 1)}
-          />
-        ))}
-      </div>
+          <div className="home-slider-controls">
+            <div className="home-slider-dots">
+              {displaySlides.map((slide, index) => (
+                <button
+                  key={slide.id || slide.title || index}
+                  type="button"
+                  className={"home-slider-dot " + (index === active ? "is-active" : "")}
+                  onClick={() => setActive(index)}
+                  aria-label={"Go to banner " + (index + 1)}
+                  aria-current={index === active}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              className="home-slider-pause"
+              onClick={() => setPaused((value) => !value)}
+              aria-label={paused ? "Resume automatic banner rotation" : "Pause automatic banner rotation"}
+            >
+              {paused ? <Play size={13} /> : <Pause size={13} />}
+              <span>{paused ? "Play" : "Pause"}</span>
+            </button>
+          </div>
+        </>
+      )}
     </section>
   );
 }
