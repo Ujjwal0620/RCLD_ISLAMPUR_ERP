@@ -99,6 +99,18 @@ const courses = [
   },
 ];
 
+const brochureCourseDetails = {
+  CCA: { duration: "6 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-DOS", "MS-Windows", "MS-Office (Word, Excel, PowerPoint)", "Internet & E-mail"] }] },
+  DCA: { duration: "12 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-Windows", "MS-DOS", "MS-Office (Word, Excel, PowerPoint & Access)", "Blue Java, HTML, Internet & E-mail"] }] },
+  ADCA: { duration: "12 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-DOS", "MS-Windows", "MS-Office (Word, Excel, PowerPoint, Access)", "Basics of C", "Visual Basic 6.0", "VB.NET", "Internet & E-mail"] }] },
+  CCC: { duration: "3 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-Windows", "Introduction to AutoCAD", "Concept of Drawing Using AutoCAD", "Internet & E-mail"] }] },
+  CAO: { duration: "6 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-Windows", "Concept of Accountancy", "Tally, Fact (Accounting Software)", "Internet & Email"] }] },
+  DWPD: { duration: "12 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-Windows", "PHP, HTML, CSS", "Java Script / J-Queries, My-SQL"] }] },
+  DOM: { duration: "12 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-Windows", "MS-DOS", "MS-Office (Word, Excel, PowerPoint, Access, Outlook)", "CorelDraw", "Photoshop", "Tally with GST", "Generative AI Tools", "Hardware, Networking & Sharing", "CCTV Installation", "Cyber Security", "Internet, E-mail & Online works"] }] },
+  DCST: { duration: "12 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-Windows", "MS-DOS", "MS Office (Word, Excel, PowerPoint, Access)", "C Programming", "Java Script Programming", "HTML", "Python", "SQL", "Internet & E-mail"] }] },
+  DCAP: { duration: "12 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-Windows", "MS-DOS", "MS-Office (Word, Excel, PowerPoint, Access)", "Concept of Accountancy", "Tally with GST (Project)", "Accord", "Corporate Banking", "Taxation", "Internet"] }] },
+  DHNT: { duration: "12 Months", syllabus: [{ title: "Curriculum", topics: ["Computer Fundamentals (Basic)", "MS-Windows", "MS-DOS", "MS-Office (Word, Excel, PowerPoint)", "Basic of Hardware (Assembling & Troubleshooting)", "Networking (LAN, Cabling, IP Addressing, Sharing, Troubleshooting)", "O/S & Software Installation", "Maintenance", "Internet & Email"] }] },
+};
 async function main() {
   for (const key of permissions) await db.permission.upsert({where:{key},update:{},create:{key}});
   const role=await db.role.upsert({where:{name:"SUPERADMIN"},update:{description:"Full institutional control"},create:{name:"SUPERADMIN",description:"Full institutional control"}});
@@ -111,9 +123,11 @@ async function main() {
   await db.userRole.upsert({where:{userId_roleId:{userId:user.id,roleId:role.id}},update:{},create:{userId:user.id,roleId:role.id}});
   for (const course of courses) {
     const discountType = course.discountType || "NONE";
+    const detail = brochureCourseDetails[course.code] || {};
     const data = {
       name: course.name,
       shortDescription: course.shortDescription,
+      duration: detail.duration || null,
       standardFee: course.standardFee,
       deliveryMode: "HYBRID",
       discountType,
@@ -122,7 +136,7 @@ async function main() {
       active: course.active !== false,
       onlinePublished: course.onlinePublished !== false,
       displayOrder: course.displayOrder,
-      syllabus: course.syllabus,
+      syllabus: detail.syllabus || course.syllabus,
     };
 
     await db.course.upsert({
