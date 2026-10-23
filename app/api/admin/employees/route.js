@@ -68,9 +68,14 @@ export async function POST(request) {
           passwordHash,
           phone: body.phone || null,
           status: body.userStatus || "ACTIVE",
-          userRoles: { create: roles.map((role) => ({ roleId: role.id })) },
         },
       });
+      if (roles.length) {
+        await tx.userRole.createMany({
+          data: roles.map((role) => ({ userId: createdUser.id, roleId: role.id })),
+          skipDuplicates: true,
+        });
+      }
 
       const employee = await tx.employee.create({
         data: {
