@@ -42,3 +42,12 @@ Every major completed build should receive a documented restore point before the
 ### Database note
 
 The application schema now expects new online enrollments to default to `PENDING`. Git rollback does not roll back the Neon production database. Production schema alignment must be handled and verified separately before payment activation is treated as production-ready.
+
+## Recovery Branch: Employee & ERP Management Expansion — 2026-10-23
+
+- Base restore commit: 6beedce841a7c505b6ca99aeae4ca45e7b63826a
+- Recovery branch: restore/2026-10-23-pre-employee-erp-fixes
+- Current implementation head before documentation update: e78c07f9627a1939160aa1837a774ca72b5975d3
+- Status: Development checkpoint — implementation committed, local/CI verification still required.
+- Scope: Expanded employee master schema, employee CRUD API, employee profile management UI, protected Super Admin delete workflow, official brochure course durations/curricula in seed data, and TODO tracking.
+- Production: Not deployed. Do not treat this branch as a production restore point until verification passes.

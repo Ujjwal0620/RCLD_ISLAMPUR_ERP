@@ -9,7 +9,7 @@
 - [x] Establish the initial baseline restore point
 - [x] Record restore points in repository documentation
 - [x] Add a master checkbox-based build tracker
-- [ ] Add a restore point after every major verified build
+- [~] Add a restore point after every major verified build — pre-work recovery branch created for the current employee/ERP expansion; stable post-verification checkpoint pending
 - [ ] Keep database migration history aligned with application releases
 - [x] Add automated production-readiness checks to CI
 - [ ] Add release/changelog documentation for every major milestone
@@ -159,8 +159,8 @@
 ## 10. Roles, Employees & Permissions
 
 - [x] Role/permission foundation
-- [ ] Employee master
-- [ ] Multiple roles per employee
+- [~] Employee master — employee profile schema, CRUD API and management UI implemented on the recovery branch; build/runtime verification pending
+- [~] Multiple roles per employee — role selection is implemented for Super Admin; runtime verification pending
 - [ ] Custom role creation
 - [ ] Custom permission assignment
 - [ ] Teacher/faculty permissions
@@ -307,6 +307,7 @@
 26. [ ] Complete localization, object storage and production smoke tests.
 27. [ ] Complete final production readiness and rollback drill.
 28. [ ] Verify course manager, Superadmin discount enforcement, server-side admission pricing and safe delete workflows in the running app after restarting the dev server so Prisma Client is regenerated.
+29. [~] Verify employee master CRUD, profile fields, role assignment, protected delete and local Prisma schema synchronization.
 
 ## Restore Point Policy
 
