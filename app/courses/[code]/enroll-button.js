@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2, CreditCard, LoaderCircle, LockKeyhole } from "lucide-react";
+import { formatCourseMoneyCompact } from "@/lib/course-pricing";
 
 export default function EnrollButton({ courseCode, onlineFee }) {
   const [state, setState] = useState("idle");
@@ -63,7 +64,7 @@ export default function EnrollButton({ courseCode, onlineFee }) {
     return <a href="/student/dashboard" className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 font-black text-white"><CheckCircle2 size={18} /> Go to My Learning</a>;
   }
 
-  const label = onlineFee ? "Enroll • ₹" + onlineFee : "Enroll & Continue";
+  const label = onlineFee != null ? "Enroll • " + formatCourseMoneyCompact(onlineFee) : "Enroll & Continue";
   return (
     <div>
       <button onClick={enroll} disabled={state === "loading"} className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 font-black text-white disabled:opacity-60">

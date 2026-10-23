@@ -1,14 +1,9 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  BookOpen,
-  CheckCircle2,
-  Code2,
   GraduationCap,
   Laptop,
-  PlayCircle,
   ShieldCheck,
-  Sparkles,
   Target,
   Users,
   Zap,
@@ -16,40 +11,22 @@ import {
 import { db } from "@/lib/db";
 import PublicNavbar from "@/components/public-navbar";
 import PublicFooter from "@/components/public-footer";
+import PublicCourseCard from "@/components/public-course-card";
 import HomeHeroSlider from "@/components/home-hero-slider";
+import { serializeCourse } from "@/lib/course-pricing";
 
 export const dynamic = "force-dynamic";
-
-const fallback = [
-  ["CCA", "Certificate in Computer Applications", "Build confident everyday computer and digital skills."],
-  ["DCA", "Diploma in Computer Applications", "Practical office productivity, applications and professional computer skills."],
-  ["ADCA", "Advanced Diploma in Computer Applications", "Advanced office, design and digital skills for career growth."],
-  ["CCC", "Course on Computer Concepts", "A foundation for computer, internet and digital literacy."],
-  ["CAO", "Computer Accounting & Office", "Computerized office workflows and accounting fundamentals."],
-  ["DWPD", "Diploma in Web & Programming Development", "Web design, programming and development fundamentals."],
-];
 
 async function getCourses() {
   try {
     const rows = await db.course.findMany({
       where: { active: true, onlinePublished: true },
-      orderBy: { code: "asc" },
+      orderBy: [{ displayOrder: "asc" }, { code: "asc" }],
       take: 6,
     });
-
-    return rows.length
-      ? rows
-      : fallback.map(([code, name, shortDescription]) => ({
-          code,
-          name,
-          shortDescription,
-        }));
+    return rows.map(serializeCourse);
   } catch {
-    return fallback.map(([code, name, shortDescription]) => ({
-      code,
-      name,
-      shortDescription,
-    }));
+    return [];
   }
 }
 
@@ -93,36 +70,16 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {courses.map((course) => (
-              <Link
-                href={"/courses/" + course.code.toLowerCase()}
-                key={course.code}
-                className="public-card group"
-              >
-                {course.imageUrl && <div className="mb-5 h-40 rounded-2xl bg-cover bg-center" style={{backgroundImage: `linear-gradient(0deg,rgba(2,6,23,.42),rgba(2,6,23,.05)),url("${course.imageUrl}")`}} />}
-                <div className="flex items-center justify-between">
-                  <span className="public-code">{course.code}</span>
-                  <span className="grid h-9 w-9 place-items-center rounded-xl border border-white/10 text-slate-400 transition group-hover:border-cyan-300/30 group-hover:text-cyan-300">
-                    <ArrowRight size={16} />
-                  </span>
-                </div>
-
-                <h3 className="mt-8 text-xl font-black text-white">{course.name}</h3>
-                <p className="mt-3 min-h-12 text-sm leading-6 text-slate-400">
-                  {course.shortDescription || "Practical, structured computer skill development."}
-                </p>
-
-                <div className="mt-7 flex items-center gap-4 border-t border-white/10 pt-4 text-[10px] font-black uppercase tracking-[.12em] text-slate-400">
-                  <span>Structured</span>
-                  <span>•</span>
-                  <span>Practical</span>
-                  <span>•</span>
-                  <span>Online</span>
-                </div>
-              </Link>
-            ))}
-          </div>
+          {courses.length ? (
+            <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {courses.map((course) => <PublicCourseCard key={course.code} course={course} />)}
+            </div>
+          ) : (
+            <div className="mt-10 rounded-3xl border border-white/10 bg-white/[.025] p-10 text-center">
+              <p className="text-sm font-black text-white">Course catalogue is being prepared.</p>
+              <p className="mt-2 text-sm text-slate-400">Published programmes will appear here automatically.</p>
+            </div>
+          )}
         </div>
       </section>
 

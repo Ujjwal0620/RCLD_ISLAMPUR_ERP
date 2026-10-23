@@ -28,10 +28,14 @@
 - Superadmin-controlled multi-role RBAC.
 - Vercel testing; Hostinger intended later.
 - Groq initial AI provider.
+- Official course names and base offline fees are recorded in `docs/COURSES.md`.
+- Course discounts are generic percentage/fixed amounts and Superadmin-only.
+- Existing fee ledgers preserve the pricing snapshot taken at admission.
 
 ## Open Decisions / Inputs Required
 - Official admission form fields.
-- Full course names, duration, fees, online fees, eligibility and syllabus.
+- Course duration, eligibility, online fees, admission fees and detailed syllabus (official names and base offline fees are in `docs/COURSES.md`).
+- Official Coding for Kids code and fee; current `CFK` code is provisional and the course remains unpublished.
 - Official student registration-number format.
 - Final certificate-number format/template.
 - Exact institute coordinates and permitted attendance geofence.

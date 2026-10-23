@@ -20,7 +20,7 @@ const groups=[
 {href:"/dashboard/admin/crm",label:"CRM & Follow-ups",icon:ContactRound,permission:"crm.view"},
 {href:"/dashboard/admin/communication",label:"Communication",icon:Megaphone,permission:"dashboard.view"}]},
 {label:"Finance & Operations",items:[
-{href:"/dashboard/admin/finance",label:"Fees & Finance",icon:WalletCards,permission:"finance.view"},
+{href:"/dashboard/admin/fees",label:"Fees & Finance",icon:WalletCards,permission:"finance.view"},
 {href:"/dashboard/admin/inventory",label:"Inventory & Assets",icon:Package,permission:"inventory.manage"},
 {href:"/dashboard/admin/payroll",label:"Payroll & Leave",icon:Banknote,permission:"employees.manage"},
 {href:"/dashboard/admin/reports",label:"Reports & Analytics",icon:BarChart3,permission:"reports.view"}]},

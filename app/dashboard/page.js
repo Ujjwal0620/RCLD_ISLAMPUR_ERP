@@ -11,7 +11,7 @@ const modules = [
   ["Batches","Create and operate course batches and capacity.","/dashboard/admin/batches",Layers3,"batches.view"],
   ["Attendance","Daily attendance, corrections and reports.","/dashboard/admin/attendance",CalendarCheck2,"students.view"],
   ["Exams & Results","Exam setup, marks, publishing and result workflows.","/dashboard/admin/exams",ClipboardCheck,"exams.view"],
-  ["Fees & Finance","Fees, receipts, payments and reconciliation.","/dashboard/admin/finance",IndianRupee,"finance.view"]
+  ["Fees & Finance","Fees, receipts, payments and reconciliation.","/dashboard/admin/fees",IndianRupee,"finance.view"]
 ];
 
 export default async function DashboardPage() {

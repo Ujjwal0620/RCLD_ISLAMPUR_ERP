@@ -1,5 +1,91 @@
-import Link from "next/link";import {ArrowRight,BookOpen,Clock3,GraduationCap,Sparkles} from "lucide-react";import {db} from "@/lib/db";import PublicNavbar from "@/components/public-navbar";import PublicFooter from "@/components/public-footer";
-export const dynamic="force-dynamic";
-const fallback=[["CCA","Certificate in Computer Applications","Foundation computer skills for everyday and professional use."],["DCA","Diploma in Computer Applications","Practical computer applications, office productivity and digital skills."],["ADCA","Advanced Diploma in Computer Applications","Advanced office, design, internet and professional computer skills."],["CCC","Course on Computer Concepts","Essential digital literacy, internet, office and computer fundamentals."],["CAO","Computer Accounting & Office","Office productivity with accounting and computerised business workflows."],["DWPD","Diploma in Web & Programming Development","Web design, programming and modern development fundamentals."],["DOM","Diploma in Office Management","Office administration, documentation and productivity skills."],["DCST","Diploma in Computer Software Technology","Software tools, productivity applications and practical computer technology."],["DCAP","Diploma in Computer Application Programming","Programming and application development fundamentals."],["DHNT","Diploma in Hardware & Networking Technology","Computer hardware, maintenance and networking fundamentals."]];
-async function getCourses(){try{const rows=await db.course.findMany({where:{active:true,onlinePublished:true},orderBy:{code:"asc"}});return rows.length?rows:fallback.map(([code,name,shortDescription])=>({code,name,shortDescription}));}catch{return fallback.map(([code,name,shortDescription])=>({code,name,shortDescription}));}}
-export default async function Courses(){const courses=await getCourses();return <main className="public-site min-h-screen"><PublicNavbar/><section className="public-page-hero"><div className="public-grid"/><div className="relative mx-auto max-w-7xl px-6 py-20 sm:py-28"><span className="public-pill"><BookOpen size={14}/> Program catalogue</span><h1 className="mt-7 max-w-5xl text-5xl font-black leading-[.98] tracking-[-.05em] text-white sm:text-7xl">Choose your <span className="public-gradient-text">skill path.</span></h1><p className="mt-7 max-w-2xl text-lg leading-8 text-slate-400">Explore practical programs across computer applications, office productivity, programming, accounting, hardware and digital skills.</p><div className="mt-8 flex flex-wrap gap-2">{["Computer Applications","Office Skills","Programming","Accounting","Hardware & Networking"].map(x=><span key={x} className="rounded-full border border-white/10 bg-white/[.035] px-3 py-2 text-[11px] font-black text-slate-400">{x}</span>)}</div></div></section><section className="public-section"><div className="mx-auto max-w-7xl px-6"><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{courses.map((c,i)=><Link href={"/courses/"+c.code.toLowerCase()} key={c.code} className="public-card group"><div className="flex items-center justify-between"><span className="public-code">{c.code}</span><GraduationCap size={24} className="text-slate-700 transition group-hover:text-cyan-300"/></div><h2 className="mt-8 text-xl font-black text-white">{c.name}</h2><p className="mt-3 min-h-14 text-sm leading-6 text-slate-500">{c.shortDescription||"Practical, structured learning designed for useful computer skills."}</p><div className="mt-7 flex items-center justify-between border-t border-white/[.07] pt-4"><div className="flex gap-4 text-[10px] font-black uppercase tracking-[.12em] text-slate-600"><span className="inline-flex items-center gap-1"><BookOpen size={12}/> Structured</span><span className="inline-flex items-center gap-1"><Clock3 size={12}/> Flexible</span></div><ArrowRight size={16} className="text-cyan-300 transition group-hover:translate-x-1"/></div></Link>)}</div></div></section><PublicFooter/></main>}
+import { BookOpen, GraduationCap, Percent } from "lucide-react";
+import { db } from "@/lib/db";
+import PublicNavbar from "@/components/public-navbar";
+import PublicFooter from "@/components/public-footer";
+import PublicCourseCard from "@/components/public-course-card";
+import { calculateCoursePricing, serializeCourse } from "@/lib/course-pricing";
+
+export const dynamic = "force-dynamic";
+
+export const metadata = {
+  title: "Courses | RCLD Islampur",
+  description: "Explore RCLD computer courses, diploma programmes and practical skill paths.",
+};
+
+async function getCourses() {
+  try {
+    const rows = await db.course.findMany({
+      where: { active: true, onlinePublished: true },
+      orderBy: [{ displayOrder: "asc" }, { code: "asc" }],
+    });
+    return rows.map(serializeCourse);
+  } catch {
+    return [];
+  }
+}
+
+export default async function Courses() {
+  const courses = await getCourses();
+  const discounted = courses.filter((course) => calculateCoursePricing(course).hasDiscount).length;
+
+  return (
+    <main className="public-site min-h-screen">
+      <PublicNavbar />
+      <section className="public-page-hero">
+        <div className="public-grid" />
+        <div className="relative mx-auto max-w-7xl px-6 py-20 sm:py-28">
+          <span className="public-pill"><BookOpen size={14} /> Program catalogue</span>
+          <h1 className="mt-7 max-w-5xl text-5xl font-black leading-[.98] tracking-[-.05em] text-white sm:text-7xl">
+            Choose your <span className="public-gradient-text">skill path.</span>
+          </h1>
+          <p className="mt-7 max-w-2xl text-lg leading-8 text-slate-400">
+            Explore practical programmes across computer applications, office productivity, programming, accounting, hardware and digital skills.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-2">
+            <span className="rounded-full border border-white/10 bg-white/[.035] px-3 py-2 text-[11px] font-black text-slate-300">
+              <GraduationCap className="mr-1.5 inline" size={13} /> {courses.length} programmes
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/[.035] px-3 py-2 text-[11px] font-black text-slate-300">
+              <BookOpen className="mr-1.5 inline" size={13} /> Classroom & online
+            </span>
+            {discounted > 0 && (
+              <span className="rounded-full border border-rose-300/20 bg-rose-400/10 px-3 py-2 text-[11px] font-black text-rose-200">
+                <Percent className="mr-1.5 inline" size={13} /> {discounted} current offers
+              </span>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="public-section">
+        <div className="mx-auto max-w-7xl px-6">
+          {courses.length ? (
+            <>
+              <div className="mb-8 flex items-end justify-between gap-4">
+                <div>
+                  <span className="public-eyebrow">All programmes</span>
+                  <h2 className="mt-3 text-3xl font-black tracking-tight text-white">Built for practical progress.</h2>
+                </div>
+                <p className="hidden max-w-sm text-right text-xs leading-6 text-slate-500 sm:block">
+                  Fees shown are current course fees. Online enrolment pricing is displayed on each programme page.
+                </p>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {courses.map((course) => <PublicCourseCard key={course.code} course={course} />)}
+              </div>
+            </>
+          ) : (
+            <div className="rounded-3xl border border-white/10 bg-white/[.025] p-12 text-center">
+              <BookOpen className="mx-auto text-slate-600" size={34} />
+              <h2 className="mt-4 text-xl font-black text-white">Catalogue coming soon</h2>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-400">
+                Published programmes will appear here automatically once they are configured by the academic team.
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+      <PublicFooter />
+    </main>
+  );
+}

@@ -6,6 +6,7 @@ import { hasPermission } from "@/lib/permissions";
 import { db } from "@/lib/db";
 import BatchForm from "./batch-form";
 import BatchOperations from "./batch-operations";
+import DeleteAction from "@/components/delete-action";
 
 const statusMap = {
   PLANNED: ["Planned","bg-amber-50 text-amber-700"],
@@ -78,7 +79,15 @@ export default async function BatchesPage() {
                       <div className="rounded-xl bg-slate-50 p-3"><div className="flex items-center gap-1.5 text-slate-400"><CalendarDays size={13}/> Starts</div><div className="mt-1 font-black text-slate-900">{batch.startsAt ? new Date(batch.startsAt).toLocaleDateString("en-IN") : "Not set"}</div></div>
                     </div>
                     <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500" style={{width: percent+"%"}}/></div>
-                    <div className="mt-3 flex items-center justify-between text-[10px] font-bold text-slate-400"><span>{percent}% capacity</span><span className="inline-flex items-center gap-1 group-hover:text-blue-600">Manage <ArrowUpRight size={12}/></span></div>
+                    <div className="mt-3 flex items-center justify-between text-[10px] font-bold text-slate-400">
+                      <span>{percent}% capacity</span>
+                      <span className="inline-flex items-center gap-1 group-hover:text-blue-600">Manage <ArrowUpRight size={12}/></span>
+                    </div>
+                    {hasPermission(user, "batches.manage") && (
+                      <div className="mt-3 flex items-center justify-end gap-2">
+                        <DeleteAction compact endpoint={"/api/admin/batches/"+batch.id} label={"Delete "+batch.code} confirmMessage={"Delete batch "+batch.code+" — "+batch.name+"? Student, attendance, exam or transfer history will block deletion."} />
+                      </div>
+                    )}
                     {hasPermission(user,"batches.manage") && <BatchOperations batch={{id:batch.id,name:batch.name,faculty:batch.faculties.map(f=>({id:f.employee.id,name:f.employee.user.name,employeeCode:f.employee.employeeCode})),enrollments:batch.enrollments.map(e=>({id:e.id,name:e.student.name,registrationNo:e.student.registrationNo}))}} employees={employees} targetBatches={batches.map(b=>({id:b.id,code:b.code,name:b.name}))}/>}
                   </article>
                 );

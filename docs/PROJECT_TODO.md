@@ -306,6 +306,7 @@
 25. [ ] Build AI tutor knowledge restrictions, admin analytics and employee assistant workflows.
 26. [ ] Complete localization, object storage and production smoke tests.
 27. [ ] Complete final production readiness and rollback drill.
+28. [ ] Verify course manager, Superadmin discount enforcement, server-side admission pricing and safe delete workflows in the running app after restarting the dev server so Prisma Client is regenerated.
 
 ## Restore Point Policy
 
