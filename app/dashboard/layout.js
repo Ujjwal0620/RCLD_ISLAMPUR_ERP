@@ -4,6 +4,10 @@ import ErpSidebar from "@/components/erp-sidebar";
 import ErpTopbar from "@/components/erp-topbar";
 import AiAssistant from "@/components/ai-assistant";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function DashboardLayout({ children }) {
   const user = await getCurrentUser();
 
@@ -18,6 +22,7 @@ export default async function DashboardLayout({ children }) {
         <ErpTopbar user={user} />
         {children}
       </div>
+      <AiAssistant />
     </div>
   );
 }
