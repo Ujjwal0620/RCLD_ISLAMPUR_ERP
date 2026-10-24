@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
@@ -102,6 +103,10 @@ export async function POST(request) {
       return NextResponse.json({ error: "The declaration must be accepted before submission." }, { status: 400 });
     }
 
+    if (submit && !data.password) {
+      return NextResponse.json({ error: "Create a student portal password before submitting the registration." }, { status: 400 });
+    }
+
     if (submit && !data.courseId) {
       return NextResponse.json({ error: "Select a course before submitting the registration." }, { status: 400 });
     }
@@ -121,7 +126,8 @@ export async function POST(request) {
       }
     }
 
-    const { submit: _submit, qualifications, ...payload } = data;
+    const { submit: _submit, qualifications, password, ...payload } = data;
+    const passwordHash = password ? await bcrypt.hash(password, 12) : null;
     const year = new Date().getFullYear();
     const formNo = generateFormNo(year);
     const registrationNo = payload.registrationNo || generateRegistrationNo(year);
@@ -136,6 +142,7 @@ export async function POST(request) {
           courseCode: course?.code || null,
           courseName: course?.name || null,
           status: submit ? "SUBMITTED" : "DRAFT",
+          ...(passwordHash ? { passwordHash } : {}),
           submittedAt: submit ? new Date() : null,
           createdById: user.id,
           qualifications: {
