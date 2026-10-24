@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
 import { db } from "@/lib/db";
-import { UsersRound, BookOpen, GraduationCap, IndianRupee, ArrowUpRight, Activity, Plus, ContactRound, CalendarCheck2, ClipboardCheck, Layers3, Sparkles, TrendingUp, ChevronRight } from "lucide-react";
+import { UsersRound, BookOpen, GraduationCap, IndianRupee, ArrowUpRight, Activity, Plus, ContactRound, CalendarCheck2, ClipboardCheck, Layers3, Sparkles, TrendingUp, ChevronRight, BarChart3 } from "lucide-react";
 
 const modules = [
   ["Admissions & Enquiries","Capture leads and convert enquiries into admissions.","/dashboard/admin/admissions",ContactRound,"crm.view"],
@@ -18,7 +18,7 @@ export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const [students,courses,enrollments,users,online,pending,audit,batches] = await Promise.all([
+  const [students,courses,enrollments,users,online,pending,audit,batches,offline,employees,feeLedgers,attendance] = await Promise.all([
     db.student.count(),
     db.course.count({where:{active:true}}),
     db.onlineEnrollment.count({where:{status:"ACTIVE"}}),
@@ -26,8 +26,16 @@ export default async function DashboardPage() {
     db.student.count({where:{studentType:"ONLINE"}}),
     db.onlineEnrollment.count({where:{status:"PENDING"}}),
     db.auditLog.findMany({orderBy:{createdAt:"desc"},take:6,select:{id:true,action:true,entityType:true,createdAt:true}}),
-    db.batch.count()
+    db.batch.count(),
+    db.student.count({where:{studentType:"OFFLINE"}}),
+    db.employee.count(),
+    db.feeLedger.findMany({select:{finalAmount:true,paidAmount:true,balanceAmount:true,status:true}}),
+    db.studentAttendance.groupBy({by:["status"],_count:{_all:true}})
   ]);
+
+  const money=feeLedgers.reduce((a,x)=>({billed:a.billed+Number(x.finalAmount||0),paid:a.paid+Number(x.paidAmount||0),due:a.due+Number(x.balanceAmount||0)}),{billed:0,paid:0,due:0});
+  const attendanceTotal=attendance.reduce((n,x)=>n+x._count._all,0); const attendancePresent=attendance.find(x=>x.status==="PRESENT")?._count._all||0; const attendanceRate=attendanceTotal?Math.round(attendancePresent*100/attendanceTotal):0;
+  const maxLearners=Math.max(1,online,offline); const maxMoney=Math.max(1,money.billed,money.paid,money.due);
 
   const stats = [
     ["Students",students,UsersRound,"/dashboard/admin/students","Registered learners"],
@@ -65,6 +73,16 @@ export default async function DashboardPage() {
                 <div className="mt-1 text-xs text-slate-500">{desc}</div>
               </Link>
             ))}
+          </section>
+
+          <section className="mt-5 grid gap-5 xl:grid-cols-2">
+            <AnalyticsCard title="Learner mix" subtitle="Online and centre-based students" icon={BarChart3}>
+              <Bar label="Offline students" value={offline} max={maxLearners}/><Bar label="Online students" value={online} max={maxLearners}/><Bar label="Employees" value={employees} max={Math.max(1,employees,offline,online)}/>
+            </AnalyticsCard>
+            <AnalyticsCard title="Finance pulse" subtitle="Current offline fee ledgers" icon={IndianRupee}>
+              <Bar label="Billed" value={money.billed} max={maxMoney} money/><Bar label="Collected" value={money.paid} max={maxMoney} money/><Bar label="Outstanding" value={money.due} max={maxMoney} money/>
+              <div className="mt-4 flex items-center justify-between rounded-xl bg-slate-50 px-4 py-3"><span className="text-xs font-bold text-slate-500">Recorded attendance rate</span><span className="text-lg font-black text-blue-700">{attendanceRate}%</span></div>
+            </AnalyticsCard>
           </section>
 
           <section className="mt-5 grid gap-5 xl:grid-cols-[1.35fr_.65fr]">
@@ -110,3 +128,6 @@ export default async function DashboardPage() {
 function Pulse({label,value,note}) {
   return <div><div className="flex items-end justify-between gap-3"><div><p className="text-xs font-bold text-slate-500">{label}</p><p className="mt-1 text-2xl font-black">{value}</p></div><span className="text-[10px] font-bold text-slate-400">{note}</span></div><div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100"><div className="h-full w-2/3 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500"/></div></div>;
 }
+
+function AnalyticsCard({title,subtitle,icon:Icon,children}){return <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,.045)] sm:p-6"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-blue-700"><Icon size={18}/></span><div><h2 className="font-black">{title}</h2><p className="text-xs text-slate-500">{subtitle}</p></div></div><div className="mt-5 space-y-4">{children}</div></div>}
+function Bar({label,value,max,money=false}){const width=Math.max(value>0?4:0,Math.min(100,Number(value||0)*100/Math.max(1,max)));const shown=money?"₹"+Number(value||0).toLocaleString("en-IN",{maximumFractionDigits:0}):Number(value||0).toLocaleString("en-IN");return <div><div className="mb-2 flex items-center justify-between gap-3"><span className="text-xs font-bold text-slate-600">{label}</span><span className="text-xs font-black text-slate-900">{shown}</span></div><div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-blue-600" style={{width:width+"%"}}/></div></div>}
