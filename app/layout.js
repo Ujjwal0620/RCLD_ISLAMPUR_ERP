@@ -26,5 +26,5 @@ export default function RootLayout({children}) {
     "areaServed":{"@type":"City","name":"Islampur"},"address":{"@type":"PostalAddress","addressLocality":"Islampur","addressRegion":"West Bengal","postalCode":"733202","addressCountry":"IN"},
     "telephone":"+91-9851775891"
   };
-  return <html lang="en"><body className={outfit.className}>{children}<script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(organization)}} /></body></html>;
+  return <html lang="en" data-scroll-behavior="smooth"><body className={outfit.className}>{children}<script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(organization)}} /></body></html>;
 }
