@@ -552,6 +552,7 @@ model Registration {
   kitIssueNo           String?
   aecCode              String?
   registrationNo       String?            @unique
+  passwordHash         String?
   courseId             String?
   courseName           String?
   courseCode           String?
