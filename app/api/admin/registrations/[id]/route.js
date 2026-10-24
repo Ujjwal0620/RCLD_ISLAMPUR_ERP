@@ -64,6 +64,7 @@ export async function PATCH(request, { params }) {
         declarationAccepted: true,
         registrationNo: true,
         studentId: true,
+        passwordHash: true,
       },
     });
 
@@ -92,6 +93,9 @@ export async function PATCH(request, { params }) {
       if (!existing.courseId && !payload.courseId) {
         return NextResponse.json({ error: "A course must be selected before approval." }, { status: 400 });
       }
+      if (!existing.passwordHash) {
+        return NextResponse.json({ error: "A student portal password is required before approval." }, { status: 400 });
+      }
     }
 
     const normalizedPayload = { ...payload, ...courseFields };
@@ -107,11 +111,23 @@ export async function PATCH(request, { params }) {
         });
         const registrationNo = duplicate ? generateRegistrationNo() : preferredRegistrationNo;
 
+        const loginEmail = registrationNo.toLowerCase().replace(/[^a-z0-9._-]/g, "") + "@student.rcld.local";
+        const account = await tx.user.create({
+          data: {
+            name: payload.applicantName || existing.applicantName,
+            email: loginEmail,
+            passwordHash: existing.passwordHash,
+            phone: payload.mobileNumber || existing.mobileNumber || null,
+            status: "ACTIVE",
+          },
+        });
         const student = await tx.student.create({
           data: {
+            userId: account.id,
             registrationNo,
             name: payload.applicantName || existing.applicantName,
             phone: payload.mobileNumber || existing.mobileNumber || null,
+            email: null,
             studentType: "OFFLINE",
             status: "ACTIVE",
           },
