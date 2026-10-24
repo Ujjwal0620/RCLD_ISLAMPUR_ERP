@@ -12,6 +12,12 @@ const schema = z.object({
   status: z.enum(["PLANNED", "ACTIVE", "COMPLETED", "CANCELLED"]).default("PLANNED"),
   startsAt: z.string().optional().or(z.literal("")),
   endsAt: z.string().optional().or(z.literal("")),
+  startTime: z.string().regex(/^([01]\\d|2[0-3]):[0-5]\\d$/).optional().or(z.literal("")),
+  endTime: z.string().regex(/^([01]\\d|2[0-3]):[0-5]\\d$/).optional().or(z.literal("")),
+  room: z.string().trim().max(80).optional().or(z.literal("")),
+}).refine((value) => !value.startTime || !value.endTime || value.startTime < value.endTime, {
+  message: "Batch end time must be after start time.",
+  path: ["endTime"],
 });
 
 export async function POST(req) {
@@ -31,9 +37,12 @@ export async function POST(req) {
         status: b.status,
         startsAt: b.startsAt ? new Date(b.startsAt) : null,
         endsAt: b.endsAt ? new Date(b.endsAt) : null,
+        startTime: b.startTime || null,
+        endTime: b.endTime || null,
+        room: b.room || null,
       },
     });
-    await db.auditLog.create({ data: { actorUserId: user.id, action: "BATCH_CREATED", entityType: "Batch", entityId: batch.id, metadata: { code: batch.code, courseId: batch.courseId } } });
+    await db.auditLog.create({ data: { actorUserId: user.id, action: "BATCH_CREATED", entityType: "Batch", entityId: batch.id, metadata: { code: batch.code, courseId: batch.courseId, startTime: batch.startTime, endTime: batch.endTime, room: batch.room } } });
     return NextResponse.json({ batch }, { status: 201 });
   } catch (e) {
     if (e?.code === "P2002") return NextResponse.json({ error: "Batch code already exists." }, { status: 409 });
