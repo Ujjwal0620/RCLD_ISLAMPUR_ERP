@@ -16,10 +16,15 @@ export default async function EmployeesPage() {
     orderBy:{createdAt:"desc"},
     include:{user:{include:{userRoles:{include:{role:true}}}}},
   }),db.role.findMany({orderBy:{name:"asc"},select:{id:true,name:true,description:true}})]);
-  // A stale generated Prisma client can temporarily lack a newly-added model after git pull.
-  // Keep the employee directory usable and let the task API report the migration/generate requirement.
-  const taskDelegate=db.employeeTask;
-  const tasks=taskDelegate?.findMany?await taskDelegate.findMany({orderBy:[{status:"asc"},{dueAt:"asc"},{createdAt:"desc"}],take:50,include:{assignee:{select:{name:true,employee:{select:{employeeCode:true}}}},createdBy:{select:{name:true}}}}):[];
+  // Keep People Operations available even when a local Prisma client/database has not
+  // yet been regenerated/migrated for the optional task module.
+  let tasks=[];
+  try {
+    const taskDelegate=db.employeeTask;
+    if(taskDelegate?.findMany) tasks=await taskDelegate.findMany({orderBy:[{status:"asc"},{dueAt:"asc"},{createdAt:"desc"}],take:50,include:{assignee:{select:{name:true,employee:{select:{employeeCode:true}}}},createdBy:{select:{name:true}}}});
+  } catch(error) {
+    console.warn("Employee task module is not ready yet. Run prisma generate and apply the current schema.",error?.message);
+  }
   const active=employees.filter(e=>e.user.status==="ACTIVE").length;
   return <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-10"><div className="mx-auto max-w-[1500px]">
     <Link href="/dashboard" className="text-xs font-black text-blue-700">← Command Center</Link>
