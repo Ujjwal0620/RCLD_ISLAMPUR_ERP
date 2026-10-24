@@ -18,6 +18,7 @@ export async function GET() {
   if (!user || (!isSuperAdmin(user) && !hasPermission(user, "employees.manage"))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
+  if (!db.employeeTask?.findMany) return NextResponse.json({ error: "Employee task module is not initialized. Run npx prisma generate and apply the current Prisma schema." }, { status: 503 });
   const tasks = await db.employeeTask.findMany({
     orderBy: [{ status: "asc" }, { dueAt: "asc" }, { createdAt: "desc" }],
     take: 200,
@@ -36,6 +37,7 @@ export async function POST(request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
   try {
+    if (!db.employeeTask?.create) return NextResponse.json({ error: "Employee task module is not initialized. Run npx prisma generate and apply the current Prisma schema." }, { status: 503 });
     const body = taskSchema.parse(await request.json());
     const employee = await db.employee.findUnique({
       where: { id: body.employeeId },
