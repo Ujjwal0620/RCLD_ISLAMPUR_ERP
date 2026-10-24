@@ -164,8 +164,9 @@
 - [ ] Multiple roles per employee
 - [ ] Custom role creation
 - [ ] Custom permission assignment
-- [ ] Teacher/faculty permissions
+- [x] Teacher/faculty exam permissions and assigned-batch scope
 - [ ] Employee dashboard
+- [x] Super Admin employee task assignment foundation
 - [ ] Permission audit/reporting
 
 ## 11. CRM
