@@ -5,7 +5,7 @@ import { Plus, Loader2 } from "lucide-react";
 
 export default function BatchForm({ courses }) {
   const router = useRouter();
-  const [form,setForm] = useState({code:"",name:"",courseId:courses[0]?.id||"",capacity:"50",status:"PLANNED",startsAt:"",endsAt:""});
+  const [form,setForm] = useState({code:"",name:"",courseId:courses[0]?.id||"",capacity:"50",status:"PLANNED",startsAt:"",endsAt:"",startTime:"",endTime:"",room:""});
   const [busy,setBusy]=useState(false); const [error,setError]=useState("");
 
   async function submit(e){
@@ -13,7 +13,7 @@ export default function BatchForm({ courses }) {
     try{
       const res=await fetch("/api/admin/batches",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(form)});
       const data=await res.json(); if(!res.ok) throw new Error(data.error||"Unable to create batch");
-      setForm({code:"",name:"",courseId:courses[0]?.id||"",capacity:"50",status:"PLANNED",startsAt:"",endsAt:""});
+      setForm({code:"",name:"",courseId:courses[0]?.id||"",capacity:"50",status:"PLANNED",startsAt:"",endsAt:"",startTime:"",endTime:"",room:""});
       router.refresh();
     }catch(err){setError(err.message)}finally{setBusy(false)}
   }
@@ -26,6 +26,8 @@ export default function BatchForm({ courses }) {
       <Field label="Course"><select required value={form.courseId} onChange={e=>setForm({...form,courseId:e.target.value})} className={input}>{courses.map(c=><option key={c.id} value={c.id}>{c.code} — {c.name}</option>)}</select></Field>
       <div className="grid grid-cols-2 gap-3"><Field label="Capacity"><input required type="number" min="1" max="50" value={form.capacity} onChange={e=>setForm({...form,capacity:e.target.value})} className={input}/></Field><Field label="Status"><select value={form.status} onChange={e=>setForm({...form,status:e.target.value})} className={input}><option>PLANNED</option><option>ACTIVE</option><option>COMPLETED</option><option>CANCELLED</option></select></Field></div>
       <div className="grid grid-cols-2 gap-3"><Field label="Start date"><input type="date" value={form.startsAt} onChange={e=>setForm({...form,startsAt:e.target.value})} className={input}/></Field><Field label="End date"><input type="date" value={form.endsAt} onChange={e=>setForm({...form,endsAt:e.target.value})} className={input}/></Field></div>
+      <div className="grid grid-cols-2 gap-3"><Field label="Class starts"><input type="time" value={form.startTime} onChange={e=>setForm({...form,startTime:e.target.value})} className={input}/></Field><Field label="Class ends"><input type="time" value={form.endTime} onChange={e=>setForm({...form,endTime:e.target.value})} className={input}/></Field></div>
+      <Field label="Room / Lab"><input value={form.room} onChange={e=>setForm({...form,room:e.target.value})} placeholder="Lab 1 / Classroom A" maxLength={80} className={input}/></Field>
       {error&&<p className="rounded-xl bg-red-50 px-3 py-2.5 text-xs font-bold text-red-700">{error}</p>}
       <button disabled={busy||!courses.length} className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-black text-white disabled:opacity-50">{busy&&<Loader2 size={16} className="animate-spin"/>}{busy?"Creating...":"Create batch"}</button>
       {!courses.length&&<p className="text-center text-[11px] text-amber-700">Create an active course first.</p>}
