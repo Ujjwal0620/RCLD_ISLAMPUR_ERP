@@ -114,14 +114,15 @@
 
 - [x] Initial course catalogue
 - [x] Course settings CRUD
-- [ ] Course fee management
-- [ ] Course eligibility management
-- [ ] Course duration management
+- [x] Course fee management
+- [x] Course eligibility management
+- [x] Course duration management
 - [x] Batch creation
 - [x] Batch capacity management
-- [ ] Batch faculty assignment
-- [ ] Batch transfer workflow
-- [ ] Batch status management
+- [x] Batch faculty assignment
+- [x] Batch transfer workflow
+- [x] Batch status management
+- [x] Batch time-slot and room/lab configuration
 
 ## 7. Attendance
 
@@ -277,7 +278,7 @@
 
 ## Current Build Queue
 
-> Audit update (2026-10-22): current development remains on `main`. The latest audit identified and fixed a missing navigation icon import that could fail the Vercel build. Global ERP/student workspace assistant support, loading/error resilience, production headers and Prisma validation in CI have been added. Vercel verification is still pending.
+> Local-first development update (2026-10-24): development remains on `main`. Vercel is intentionally disconnected while modules are verified locally. GitHub Actions remains the automated build gate; runtime completion is marked only after local testing. Employee/RBAC and RCLD-registration student credentials are implemented in code. Batch scheduling now records class start/end time and room/lab.
 
 1. [x] Verify enrollment/payment foundation in CI.
 2. [x] Build premium academic course/batch operations workspace.
