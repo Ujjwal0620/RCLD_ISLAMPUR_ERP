@@ -21,6 +21,9 @@ export default function ExamStudio({ batches, courses, initialExams, canManage }
   const [marks, setMarks] = useState("1");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState("");
+  const [aiTopic,setAiTopic]=useState("");
+  const [aiCount,setAiCount]=useState("5");
+  const [aiDrafts,setAiDrafts]=useState([]);
 
   async function createExam() {
     setBusy(true);
@@ -84,6 +87,13 @@ export default function ExamStudio({ batches, courses, initialExams, canManage }
       setBusy(false);
     }
   }
+
+  async function generateAiDraft(){
+    if(!selected||!aiTopic)return;setBusy(true);setMsg("");
+    try{const response=await fetch("/api/admin/exams/ai-draft",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({examId:selected,topic:aiTopic,count:Number(aiCount),difficulty:"mixed"})});const data=await response.json();if(!response.ok)throw new Error(data.error||"Unable to generate draft.");setAiDrafts(data.questions||[]);setMsg(data.notice||"AI draft ready for faculty review.");}catch(error){setMsg(error.message)}finally{setBusy(false)}
+  }
+
+  function useDraft(draft){setQ(draft.questionText||"");setQType("MCQ");setOptions(Array.isArray(draft.options)?[...draft.options.slice(0,4),...Array(Math.max(0,4-draft.options.length)).fill("")].slice(0,4):["","","",""]);setCorrect(draft.correctAnswer||"");setMarks(String(draft.marks||1));}
 
   async function addQuestion() {
     setBusy(true);
@@ -237,6 +247,7 @@ export default function ExamStudio({ batches, courses, initialExams, canManage }
 
             {selected === exam.id && (
               <div className="mt-5 border-t border-slate-100 pt-5">
+                <div className="mb-4 rounded-xl border border-blue-100 bg-blue-50/60 p-4"><div className="text-xs font-black text-blue-900">AI faculty assistant</div><p className="mt-1 text-[11px] text-blue-700">Draft MCQs from a topic. Nothing is saved until faculty reviews and adds the question.</p><div className="mt-3 flex flex-col gap-2 sm:flex-row"><input className="erp-input flex-1" value={aiTopic} onChange={e=>setAiTopic(e.target.value)} placeholder="Topic, e.g. MS Excel formulas"/><input className="erp-input w-24" type="number" min="1" max="20" value={aiCount} onChange={e=>setAiCount(e.target.value)}/><button type="button" disabled={busy||!aiTopic} onClick={generateAiDraft} className="rounded-xl bg-blue-700 px-4 py-2 text-xs font-black text-white disabled:opacity-50">Draft questions</button></div>{aiDrafts.length>0&&<div className="mt-3 grid gap-2">{aiDrafts.map((d,i)=><button type="button" key={i} onClick={()=>useDraft(d)} className="rounded-lg border border-blue-100 bg-white p-3 text-left text-xs hover:border-blue-300"><b>Q{i+1}.</b> {d.questionText}<span className="ml-2 font-black text-blue-700">Use draft</span></button>)}</div>}</div>
                 <div className="grid gap-2">
                   <textarea className="erp-input min-h-20" value={q} onChange={(event) => setQ(event.target.value)} placeholder="Question text" />
                   <select className="erp-input" value={qType} onChange={(event) => setQType(event.target.value)}>
