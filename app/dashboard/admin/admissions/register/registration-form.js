@@ -57,6 +57,7 @@ function emptyQualification() {
 function initialForm() {
   return {
     applicantName: "",
+    password: "",
     nationality: "Indian",
     dateOfBirth: "",
     sex: "",
@@ -184,6 +185,8 @@ export default function RegistrationForm({ courses }) {
         found.applicantName =
           "Enter the applicant's complete name.";
       }
+
+      if (form.password && form.password.length < 8) found.password = "Password must contain at least 8 characters.";
 
       if (form.dateOfBirth) {
         const birthDate = new Date(
@@ -399,6 +402,8 @@ export default function RegistrationForm({ courses }) {
 
   async function save(submit) {
     if (busy) return;
+
+    if (submit && !form.password) { setErrors({ password: "Create a student portal password before submitting." }); setStep(1); return; }
 
     if (submit && !validateAll()) return;
 
@@ -655,6 +660,19 @@ export default function RegistrationForm({ courses }) {
                   Use spaces between the first, middle and last
                   name as printed on official documents.
                 </p>
+              </Field>
+
+              <Field label="Student portal password" error={errors.password} required>
+                <input
+                  type="password"
+                  minLength={8}
+                  value={form.password}
+                  onChange={(event) => update("password", event.target.value)}
+                  className={inputClass}
+                  placeholder="Minimum 8 characters"
+                  autoComplete="new-password"
+                />
+                <p className="mt-1 text-[11px] text-slate-400">The student will use this password with the RCLD registration number after admission approval.</p>
               </Field>
 
               <Field label="Father's name / husband's name">
