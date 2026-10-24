@@ -109,6 +109,22 @@ enum RegistrationStatus {
   REJECTED
 }
 
+enum EmployeeTaskStatus {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  REVIEW
+  COMPLETED
+  CANCELLED
+}
+
+enum EmployeeTaskPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
 model User {
   id           String       @id @default(cuid())
   name         String
@@ -121,6 +137,9 @@ model User {
   student      Student?
   auditLogs    AuditLog[]   @relation("ActorAudit")
   batchTransfers BatchTransfer[]
+  assignedTasks EmployeeTask[] @relation("TaskAssignee")
+  createdTasks EmployeeTask[] @relation("TaskCreator")
+  reviewedTasks EmployeeTask[] @relation("TaskReviewer")
   recordedAttendances StudentAttendance[]
   issuedCertificates Certificate[] @relation("CertificateIssuer")
   registrationsCreated Registration[] @relation("RegistrationCreator")
@@ -178,6 +197,30 @@ model Employee {
   attendances EmployeeAttendance[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model EmployeeTask {
+  id          String               @id @default(cuid())
+  title       String
+  description String?
+  status      EmployeeTaskStatus   @default(TODO)
+  priority    EmployeeTaskPriority @default(NORMAL)
+  assigneeId  String
+  createdById String
+  reviewerId  String?
+  dueAt       DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  checklist   Json?
+  assignee    User                 @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: Cascade)
+  createdBy   User                 @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  reviewer    User?                @relation("TaskReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  @@index([assigneeId, status])
+  @@index([dueAt])
+  @@index([createdById])
 }
 
 model Student {
