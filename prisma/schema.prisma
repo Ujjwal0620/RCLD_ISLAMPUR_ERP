@@ -245,6 +245,9 @@ model Batch {
   status      BatchStatus        @default(PLANNED)
   startsAt    DateTime?
   endsAt      DateTime?
+  startTime   String?
+  endTime     String?
+  room        String?
   course      Course             @relation(fields: [courseId], references: [id])
   enrollments BatchEnrollment[]
   attendances StudentAttendance[]
