@@ -13,6 +13,11 @@ const schema=z.object({
  employeeCode:z.string().trim().min(2).max(40).transform(v=>v.toUpperCase()),
  designation:z.string().trim().max(120).optional().or(z.literal("")),
  joinedAt:z.string().optional().or(z.literal("")),
+ departmentId:z.string().optional().or(z.literal("")),
+ employmentType:z.string().trim().max(40).optional().or(z.literal("")),
+ basicPay:z.coerce.number().min(0).optional(),
+ address:z.string().trim().max(500).optional().or(z.literal("")),
+ skillIds:z.array(z.string()).default([]),
  roleIds:z.array(z.string().min(1)).min(1,"Assign at least one role.")
 });
 
@@ -37,9 +42,11 @@ export async function POST(request){
    }});
    const created=await tx.employee.create({data:{
     userId:user.id,employeeCode:data.employeeCode,designation:data.designation||null,
-    joinedAt:data.joinedAt?new Date(data.joinedAt+"T00:00:00"):null
+    joinedAt:data.joinedAt?new Date(data.joinedAt+"T00:00:00"):null,
+    departmentId:data.departmentId||null,employmentType:data.employmentType||null,basicPay:data.basicPay??null,address:data.address||null,
+    skills:{create:[...new Set(data.skillIds)].map(skillId=>({skillId}))}
    },include:{user:{include:{userRoles:{include:{role:true}}}}}});
-   await tx.auditLog.create({data:{actorUserId:actor.id,action:"EMPLOYEE_CREATED",entityType:"Employee",entityId:created.id,metadata:{employeeCode:created.employeeCode,roles:roles.map(r=>r.name)}}});
+   await tx.auditLog.create({data:{actorUserId:actor.id,action:"EMPLOYEE_CREATED",entityType:"Employee",entityId:created.id,metadata:{employeeCode:created.employeeCode,roles:roles.map(r=>r.name),departmentId:data.departmentId||null,skillCount:new Set(data.skillIds).size}}});
    return created;
   });
   return NextResponse.json({employee},{status:201});
