@@ -40,6 +40,7 @@ export default async function CoursesPage() {
             </div>
           </div>
         </section>
+        <div className="mt-5"><Link href="/dashboard/admin/courses/structure" className="inline-flex rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-xs font-black text-blue-700">Manage Subjects & Chapters →</Link></div>
         <CourseManager courses={courses} superAdmin={isSuperAdmin(user)} />
       </div>
     </main>
