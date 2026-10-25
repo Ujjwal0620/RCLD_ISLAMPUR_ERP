@@ -144,7 +144,7 @@ async function seedDemoData(demoPassword) {
   }
 
   console.log("Demo dataset ready: 200 students, 20 employees, course batches, enrollments, fee ledgers, installments, faculty mappings and tasks.");
-  console.log("Demo logins use @rcld.test emails and the SEED_DEMO_PASSWORD value.");
+  console.log("Demo logins use @rcld.test emails. The demo dataset is stored in the configured backend database.");
 }
 
 async function main() {
@@ -165,13 +165,7 @@ async function main() {
     });
   }
 
-  if (process.env.SEED_DEMO_DATA === "true") {
-    const demoPassword = process.env.SEED_DEMO_PASSWORD;
-    if (!demoPassword) throw new Error("SEED_DEMO_PASSWORD is required when SEED_DEMO_DATA=true.");
-    await seedDemoData(demoPassword);
-  } else {
-    console.log("Core RCLD seed complete. Set SEED_DEMO_DATA=true to add the removable demo dataset.");
-  }
+  await seedDemoData();
   console.log("RCLD seeded:",email);
 }
 main().catch((error)=>{console.error(error);process.exitCode=1;}).finally(()=>db.$disconnect());
