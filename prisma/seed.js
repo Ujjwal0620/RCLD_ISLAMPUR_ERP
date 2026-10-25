@@ -154,11 +154,9 @@ async function seedDemoData(demoPassword) {
 async function main() {
   for (const key of permissions) await db.permission.upsert({where:{key},update:{},create:{key}});
   const superadmin = await ensureRole("SUPERADMIN","Full institutional control",permissions);
-  const email=(process.env.SEED_SUPERADMIN_EMAIL||"admin@rcld.in").toLowerCase();
-  const password=process.env.SEED_SUPERADMIN_PASSWORD;
-  if(!password) throw new Error("SEED_SUPERADMIN_PASSWORD must be configured before seeding the Superadmin account.");
-  const passwordHash=await bcrypt.hash(password,12);
-  const user=await db.user.upsert({where:{email},update:{name:process.env.SEED_SUPERADMIN_NAME||"RCLD Superadmin",passwordHash,status:"ACTIVE"},create:{name:process.env.SEED_SUPERADMIN_NAME||"RCLD Superadmin",email,passwordHash,status:"ACTIVE"}});
+  const user=await db.user.findFirst({where:{userRoles:{some:{roleId:superadmin.id}}}});
+  if(!user) throw new Error("An existing Superadmin account is required before loading demo data.");
+  const email=user.email;
   await db.userRole.upsert({where:{userId_roleId:{userId:user.id,roleId:superadmin.id}},update:{},create:{userId:user.id,roleId:superadmin.id}});
 
   for (const course of courses) {
@@ -169,7 +167,7 @@ async function main() {
     });
   }
 
-  await seedDemoData();
+  await seedDemoData("RcldDemo@321");
   console.log("RCLD seeded:",email);
 }
 main().catch((error)=>{console.error(error);process.exitCode=1;}).finally(()=>db.$disconnect());
