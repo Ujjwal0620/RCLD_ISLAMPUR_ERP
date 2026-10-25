@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { hasPermission, isSuperAdmin } from "@/lib/permissions";
 
-const examSchema=z.object({batchId:z.string().optional().or(z.literal("")),courseId:z.string().optional().or(z.literal("")),title:z.string().trim().min(2).max(160),instructions:z.string().trim().max(2000).optional().or(z.literal("")),durationMinutes:z.coerce.number().int().min(1).max(600),negativeMarking:z.boolean().default(false),negativeMarks:z.coerce.number().min(0).max(100).default(0),passMarks:z.coerce.number().min(0).max(100000),maxAttempts:z.coerce.number().int().min(1).max(20),published:z.boolean().default(false)});
+const examSchema=z.object({batchId:z.string().optional().or(z.literal("")),courseId:z.string().optional().or(z.literal("")),title:z.string().trim().min(2).max(160),instructions:z.string().trim().max(2000).optional().or(z.literal("")),durationMinutes:z.coerce.number().int().min(1).max(600),negativeMarking:z.boolean().default(false),negativeMarks:z.coerce.number().min(0).max(100).default(0),passMarks:z.coerce.number().min(0).max(100000),maxAttempts:z.coerce.number().int().min(0).max(20).default(0),published:z.boolean().default(false)});
 const questionSchema=z.object({examId:z.string(),questionText:z.string().trim().min(2).max(5000),type:z.enum(["MCQ","DESCRIPTIVE"]),options:z.array(z.string().trim().min(1).max(500)).max(10).optional(),correctAnswer:z.string().trim().max(500).optional().or(z.literal("")),marks:z.coerce.number().positive().max(1000),sortOrder:z.coerce.number().int().min(0).default(0)});
 
 export async function GET(req){
