@@ -42,3 +42,15 @@ Every major completed build should receive a documented restore point before the
 ### Database note
 
 The application schema now expects new online enrollments to default to `PENDING`. Git rollback does not roll back the Neon production database. Production schema alignment must be handled and verified separately before payment activation is treated as production-ready.
+
+
+## Recovery Checkpoint: Pre V1 Deep Business Logic — 2026-10-25
+
+- **Commit:** `605b552bb06b637125b5fccac22235e921d51ec9`
+- **Branch:** `restore/2026-10-25-pre-v1-deep-business-logic`
+- **Status:** Recovery checkpoint (not promoted as a new stable production restore point)
+- **Scope:** State immediately before required-skill mapping, chapter-progress tracking, substitution logic and timetable-history work.
+- **Purpose:** Allows code rollback if the current deep-business-logic build needs to be abandoned.
+- **Database note:** Git rollback does not reverse PostgreSQL schema/data changes. Database changes must be handled separately.
+
+A post-development restore point must only be promoted after Prisma validation, production build and local runtime checks pass.
