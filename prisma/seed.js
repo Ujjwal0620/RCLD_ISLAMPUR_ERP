@@ -56,8 +56,8 @@ async function seedDemoData(demoPassword) {
     const course = courseRows[i];
     const batch = await db.batch.upsert({
       where:{code:`DEMO-${course.code}-2026-A`},
-      update:{name:`${course.code} Demo Batch A`,status:"ACTIVE",startTime:"10:00",endTime:"11:00",room:`L${(i%4)+1}`},
-      create:{code:`DEMO-${course.code}-2026-A`,name:`${course.code} Demo Batch A`,courseId:course.id,capacity:50,status:"ACTIVE",startTime:"10:00",endTime:"11:00",room:`L${(i%4)+1}`}
+      update:{name:`${course.code} Demo Batch A`,academicSessionId:session.id,centreId:centre.id,status:"ACTIVE",startTime:"10:00",endTime:"11:00",room:`L${(i%4)+1}`},
+      create:{code:`DEMO-${course.code}-2026-A`,name:`${course.code} Demo Batch A`,courseId:course.id,academicSessionId:session.id,centreId:centre.id,capacity:50,status:"ACTIVE",startTime:"10:00",endTime:"11:00",room:`L${(i%4)+1}`}
     });
     batches.push(batch);
   }
@@ -74,9 +74,13 @@ async function seedDemoData(demoPassword) {
     await db.userRole.upsert({where:{userId_roleId:{userId:user.id,roleId:role.id}},update:{},create:{userId:user.id,roleId:role.id}});
     const employee = await db.employee.upsert({
       where:{userId:user.id},
-      update:{employeeCode:`DEMO-RCLD/ISL/EMP/${String(i).padStart(4,"0")}`,designation:i<=3?"Admin":"Faculty",joinedAt:new Date(2026,0,(i%20)+1)},
-      create:{userId:user.id,employeeCode:`DEMO-RCLD/ISL/EMP/${String(i).padStart(4,"0")}`,designation:i<=3?"Admin":"Faculty",joinedAt:new Date(2026,0,(i%20)+1)}
+      update:{employeeCode:`DEMO-RCLD/ISL/EMP/${String(i).padStart(4,"0")}`,designation:i<=3?"Admin":"Faculty",departmentId:i<=3?departments["Administration"].id:departments["Teaching/Faculty"].id,employmentType:"FULL_TIME",basicPay:18000+(i*500),employmentStatus:"ACTIVE",joinedAt:new Date(2026,0,(i%20)+1)},
+      create:{userId:user.id,employeeCode:`DEMO-RCLD/ISL/EMP/${String(i).padStart(4,"0")}`,designation:i<=3?"Admin":"Faculty",departmentId:i<=3?departments["Administration"].id:departments["Teaching/Faculty"].id,employmentType:"FULL_TIME",basicPay:18000+(i*500),employmentStatus:"ACTIVE",joinedAt:new Date(2026,0,(i%20)+1)}
     });
+    for (let s=0;s<4;s++) {
+      const skill=skills[(i+s*3)%skills.length];
+      await db.employeeSkill.upsert({where:{employeeId_skillId:{employeeId:employee.id,skillId:skill.id}},update:{},create:{employeeId:employee.id,skillId:skill.id}});
+    }
     employeeUsers.push({user,employee});
   }
 
@@ -104,8 +108,8 @@ async function seedDemoData(demoPassword) {
     await db.userRole.upsert({where:{userId_roleId:{userId:user.id,roleId:studentRole.id}},update:{},create:{userId:user.id,roleId:studentRole.id}});
     const student = await db.student.upsert({
       where:{registrationNo},
-      update:{userId:user.id,name,phone:`80000${String(i).padStart(5,"0")}`,email,studentType:i%5===0?"ONLINE":"OFFLINE",status:"ACTIVE"},
-      create:{userId:user.id,registrationNo,name,phone:`80000${String(i).padStart(5,"0")}`,email,studentType:i%5===0?"ONLINE":"OFFLINE",status:"ACTIVE"}
+      update:{userId:user.id,name,phone:`80000${String(i).padStart(5,"0")}`,email,studentType:i%5===0?"ONLINE":"OFFLINE",centreId:centre.id,status:"ACTIVE"},
+      create:{userId:user.id,registrationNo,name,phone:`80000${String(i).padStart(5,"0")}`,email,studentType:i%5===0?"ONLINE":"OFFLINE",centreId:centre.id,status:"ACTIVE"}
     });
     const enrollment = await db.batchEnrollment.upsert({
       where:{studentId_batchId:{studentId:student.id,batchId:batch.id}},
