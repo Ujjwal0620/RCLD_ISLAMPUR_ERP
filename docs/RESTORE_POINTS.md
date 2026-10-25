@@ -54,3 +54,12 @@ The application schema now expects new online enrollments to default to `PENDING
 - **Database note:** Git rollback does not reverse PostgreSQL schema/data changes. Database changes must be handled separately.
 
 A post-development restore point must only be promoted after Prisma validation, production build and local runtime checks pass.
+
+
+## Recovery Checkpoint: Pre Student/Finance/Exam V1 Rules — 2026-10-25
+
+- **Commit:** `b23503e0f9d8a396415e37df3547070afe665162`
+- **Branch:** `restore/2026-10-25-pre-student-finance-exam-rules`
+- **Status:** Recovery checkpoint (pre-phase; not a stable production promotion)
+- **Scope:** State before enforcing the frozen V1 student/finance/exam/certificate business rules.
+- **Database note:** Git rollback does not reverse PostgreSQL schema/data changes.
