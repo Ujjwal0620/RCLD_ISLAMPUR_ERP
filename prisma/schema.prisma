@@ -204,6 +204,9 @@ model Employee {
   batchFaculties BatchFaculty[]
   attendances EmployeeAttendance[]
   schedules   BatchSchedule[]
+  chapterProgress ChapterProgress[]
+  substitutionsAsOriginal FacultySubstitution[] @relation("OriginalFaculty")
+  substitutionsAsSubstitute FacultySubstitution[] @relation("SubstituteFaculty")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -316,6 +319,7 @@ model Batch {
   transfersTo   BatchTransfer[] @relation("TransferToBatch")
   exams         Exam[]
   certificates  Certificate[]
+  chapterProgress ChapterProgress[]
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
 }
@@ -790,6 +794,7 @@ model Skill {
   name      String   @unique
   active    Boolean  @default(true)
   employees EmployeeSkill[]
+  subjectRequirements SubjectRequiredSkill[]
   createdAt DateTime @default(now())
 }
 
@@ -814,6 +819,8 @@ model Subject {
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   chapters    Chapter[]
   schedules   BatchSchedule[]
+  requiredSkills SubjectRequiredSkill[]
+  chapterProgress ChapterProgress[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -829,6 +836,7 @@ model Chapter {
   sortOrder   Int      @default(0)
   active      Boolean  @default(true)
   subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  progress    ChapterProgress[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -866,10 +874,75 @@ model BatchSchedule {
   batchSeries BatchSeries @relation(fields: [batchSeriesId], references: [id], onDelete: Cascade)
   subject     Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
   employee    Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+  history     BatchScheduleHistory[]
+  substitutions FacultySubstitution[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([batchSeriesId, dayOfWeek, startTime])
   @@index([employeeId, dayOfWeek, startTime])
   @@index([room, dayOfWeek, startTime])
+}
+
+
+model SubjectRequiredSkill {
+  subjectId String
+  skillId   String
+  subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  skill     Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([subjectId, skillId])
+  @@index([skillId])
+}
+
+model ChapterProgress {
+  id          String   @id @default(cuid())
+  batchId     String
+  chapterId   String
+  facultyId   String?
+  status      String   @default("NOT_STARTED")
+  startedAt   DateTime?
+  completedAt DateTime?
+  note        String?
+  batch       Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  faculty     Employee? @relation(fields: [facultyId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([batchId, chapterId])
+  @@index([facultyId, status])
+}
+
+model BatchScheduleHistory {
+  id              String   @id @default(cuid())
+  scheduleId      String
+  action          String
+  previousData    Json?
+  newData         Json?
+  reason          String?
+  changedByUserId String?
+  createdAt       DateTime @default(now())
+  schedule        BatchSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId, createdAt])
+}
+
+model FacultySubstitution {
+  id                   String   @id @default(cuid())
+  scheduleId           String
+  originalEmployeeId   String?
+  substituteEmployeeId String
+  substitutionDate     DateTime @db.Date
+  reason               String?
+  assignedByUserId     String?
+  active               Boolean  @default(true)
+  schedule             BatchSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  originalEmployee     Employee? @relation("OriginalFaculty", fields: [originalEmployeeId], references: [id], onDelete: SetNull)
+  substituteEmployee   Employee @relation("SubstituteFaculty", fields: [substituteEmployeeId], references: [id], onDelete: Restrict)
+  createdAt            DateTime @default(now())
+
+  @@index([scheduleId, substitutionDate])
+  @@index([substituteEmployeeId, substitutionDate])
 }
