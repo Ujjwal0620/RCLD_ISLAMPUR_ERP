@@ -340,9 +340,9 @@ A restore point is promoted only after the relevant build passes verification. T
 - [ ] Complete academic-session rollover without deleting historical cohorts
 
 ### Exams/results/certificates
-- [ ] Enforce MCQ-only V1 exam authoring
-- [ ] Enforce outstanding-fee exam eligibility block
-- [ ] Preserve unlimited re-exam attempt history with no separate re-exam fee
+- [x] Enforce MCQ-only V1 exam authoring (code + CI verified; local runtime verification still required)
+- [x] Enforce outstanding-fee exam eligibility block (code + CI verified; local runtime verification still required)
+- [x] Preserve unlimited re-exam attempt history with no separate re-exam fee (code + CI verified; local runtime verification still required)
 - [ ] Use highest score as final displayed result while retaining all attempts
 - [ ] Enforce course completion = chapters completed + required exams passed + fees cleared
 - [ ] Enforce certificate eligibility = course completed + required exam passed + fees cleared
