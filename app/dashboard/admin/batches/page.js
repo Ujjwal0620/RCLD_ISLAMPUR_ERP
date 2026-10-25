@@ -53,6 +53,7 @@ export default async function BatchesPage() {
           </div>
         </section>
 
+        <div className="mt-5"><Link href="/dashboard/admin/batches/timetable" className="inline-flex rounded-xl border border-blue-200 bg-blue-50 px-4 py-2.5 text-xs font-black text-blue-700">Open Batch Series & Timetable →</Link></div>
         <div className="mt-5 grid gap-5 xl:grid-cols-[360px_minmax(0,1fr)]">
           {hasPermission(user,"batches.manage") ? <BatchForm courses={courses}/> : (
             <div className="rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-500">You have view-only access. Batch creation requires the batch management permission.</div>
