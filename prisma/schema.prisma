@@ -191,10 +191,19 @@ model Employee {
   userId       String   @unique
   employeeCode String   @unique
   designation  String?
+  departmentId String?
+  employmentType String?
+  basicPay     Decimal? @db.Decimal(12,2)
+  address      String?
+  photoUrl     String?
+  employmentStatus String @default("ACTIVE")
   joinedAt     DateTime?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  skills       EmployeeSkill[]
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   batchFaculties BatchFaculty[]
   attendances EmployeeAttendance[]
+  schedules   BatchSchedule[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
@@ -231,6 +240,8 @@ model Student {
   phone            String?
   email            String?
   studentType      StudentType
+  centreId         String?
+  centre           Centre?            @relation(fields: [centreId], references: [id], onDelete: SetNull)
   status           StudentStatus      @default(ACTIVE)
   user             User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
   enrollments      BatchEnrollment[]
@@ -270,6 +281,7 @@ model Course {
   active           Boolean            @default(true)
   onlinePublished  Boolean            @default(true)
   batches          Batch[]
+  subjects         Subject[]
   modules          CourseModule[]
   exams             Exam[]
   certificates      Certificate[]
@@ -284,6 +296,8 @@ model Batch {
   code        String             @unique
   name        String
   courseId    String
+  academicSessionId String?
+  centreId    String?
   capacity    Int                @default(50)
   status      BatchStatus        @default(PLANNED)
   startsAt    DateTime?
@@ -292,6 +306,9 @@ model Batch {
   endTime     String?
   room        String?
   course      Course             @relation(fields: [courseId], references: [id])
+  academicSession AcademicSession? @relation(fields: [academicSessionId], references: [id], onDelete: SetNull)
+  centre      Centre?             @relation(fields: [centreId], references: [id], onDelete: SetNull)
+  series      BatchSeries[]
   enrollments BatchEnrollment[]
   attendances StudentAttendance[]
   faculties   BatchFaculty[]
@@ -704,4 +721,155 @@ model HomeSlide {
   updatedAt       DateTime @updatedAt
 
   @@index([active, sortOrder])
+}
+
+
+model Organization {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  name      String
+  active    Boolean  @default(true)
+  centres   Centre[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Centre {
+  id             String   @id @default(cuid())
+  organizationId String
+  code           String
+  name           String
+  address        String?
+  phone          String?
+  email          String?
+  active         Boolean  @default(true)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  departments    Department[]
+  sessions       AcademicSession[]
+  batches        Batch[]
+  students       Student[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([organizationId, code])
+  @@index([organizationId, active])
+}
+
+model Department {
+  id        String   @id @default(cuid())
+  centreId  String
+  name      String
+  active    Boolean  @default(true)
+  centre    Centre   @relation(fields: [centreId], references: [id], onDelete: Restrict)
+  employees Employee[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([centreId, name])
+  @@index([centreId, active])
+}
+
+model AcademicSession {
+  id        String   @id @default(cuid())
+  centreId  String
+  name      String
+  startsAt  DateTime @db.Date
+  endsAt    DateTime @db.Date
+  active    Boolean  @default(true)
+  centre    Centre   @relation(fields: [centreId], references: [id], onDelete: Restrict)
+  batches   Batch[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([centreId, name])
+  @@index([centreId, active])
+}
+
+model Skill {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  active    Boolean  @default(true)
+  employees EmployeeSkill[]
+  createdAt DateTime @default(now())
+}
+
+model EmployeeSkill {
+  employeeId String
+  skillId    String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  skill      Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@id([employeeId, skillId])
+  @@index([skillId])
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  courseId    String
+  code        String?
+  name        String
+  sortOrder   Int      @default(0)
+  active      Boolean  @default(true)
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  chapters    Chapter[]
+  schedules   BatchSchedule[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([courseId, name])
+  @@index([courseId, sortOrder])
+}
+
+model Chapter {
+  id          String   @id @default(cuid())
+  subjectId   String
+  title       String
+  description String?
+  sortOrder   Int      @default(0)
+  active      Boolean  @default(true)
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([subjectId, title])
+  @@index([subjectId, sortOrder])
+}
+
+model BatchSeries {
+  id          String   @id @default(cuid())
+  batchId     String
+  code        String
+  name        String?
+  active      Boolean  @default(true)
+  batch       Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  schedules   BatchSchedule[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([batchId, code])
+  @@index([batchId, active])
+}
+
+model BatchSchedule {
+  id          String   @id @default(cuid())
+  batchSeriesId String
+  subjectId   String?
+  employeeId  String?
+  dayOfWeek   Int
+  startTime   String
+  endTime     String
+  room        String?
+  effectiveFrom DateTime? @db.Date
+  effectiveTo   DateTime? @db.Date
+  active      Boolean  @default(true)
+  batchSeries BatchSeries @relation(fields: [batchSeriesId], references: [id], onDelete: Cascade)
+  subject     Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  employee    Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([batchSeriesId, dayOfWeek, startTime])
+  @@index([employeeId, dayOfWeek, startTime])
+  @@index([room, dayOfWeek, startTime])
 }
