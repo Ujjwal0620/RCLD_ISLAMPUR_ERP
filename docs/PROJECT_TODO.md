@@ -313,3 +313,46 @@
 ## Restore Point Policy
 
 A restore point is promoted only after the relevant build passes verification. The currently documented safe rollback point is recorded in `docs/RESTORE_POINTS.md`; unverified changes remain explicitly marked as such.
+
+
+## RCLD ERP V1 Frozen Requirements — Deep Business Logic (2026-10-25)
+
+> Rounds 1–4 are frozen as the V1 baseline. `[x]` means code/build verified; `[ ]` means pending or implemented but still awaiting the required verification gate.
+
+### Academic structure and scheduling
+- [ ] Verify Course → Subject → Chapter management in the running local app
+- [ ] Verify subject required-skill mapping in the running local app
+- [ ] Verify Batch → Batch Series → Schedule in the running local app
+- [ ] Verify skill-aware faculty filtering/ranking in the running local app
+- [ ] Verify faculty/room/series schedule conflict protection
+- [ ] Verify timetable rescheduling with immutable change history
+- [ ] Verify temporary faculty substitution ranking: skill → exact-time availability → lowest load
+- [ ] Verify batch-level chapter progress: Not Started → In Progress → Completed
+- [ ] Align final timetable presentation/import with the supplied RCLD batch schedule workbook
+
+### Student/admission/finance rules
+- [ ] Complete student status lifecycle
+- [ ] Complete course-change approval with fee recalculation and audit history
+- [ ] Complete fixed-amount-only discount approval and audit trail
+- [ ] Complete configurable installment late fee, grace period and auditable waiver
+- [ ] Complete automatic fee-due reminder rules
+- [ ] Complete dropout retention and same-identity re-admission
+- [ ] Complete academic-session rollover without deleting historical cohorts
+
+### Exams/results/certificates
+- [ ] Enforce MCQ-only V1 exam authoring
+- [ ] Enforce outstanding-fee exam eligibility block
+- [ ] Preserve unlimited re-exam attempt history with no separate re-exam fee
+- [ ] Use highest score as final displayed result while retaining all attempts
+- [ ] Enforce course completion = chapters completed + required exams passed + fees cleared
+- [ ] Enforce certificate eligibility = course completed + required exam passed + fees cleared
+- [ ] Add Super Admin certificate override with mandatory reason/audit log
+- [ ] Verify student ID/admit-card/certificate QR public-safe verification
+
+### Release gate
+- [ ] GitHub Actions Prisma validation passes on the current deep-business-logic HEAD
+- [ ] GitHub Actions Next.js production build passes on the current deep-business-logic HEAD
+- [ ] Local database schema is synchronized before local runtime testing
+- [ ] Seed at least 200 temporary students and 20 temporary employees from PostgreSQL
+- [ ] Run local authentication, academic, fee, exam and certificate smoke tests
+- [ ] Promote the current work to a stable restore point only after the above checks pass
