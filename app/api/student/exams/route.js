@@ -15,6 +15,11 @@ async function access(studentId,examId){
   include:{questions:{orderBy:{sortOrder:"asc"},select:{id:true,questionText:true,type:true,options:true,marks:true,correctAnswer:true}},course:{select:{code:true,name:true}},batch:{select:{code:true,name:true,course:{select:{code:true,name:true}}}}}
  });
 }
+async function outstandingFees(studentId, exam){
+ if(!exam.batchId) return false;
+ const ledger=await db.feeLedger.findFirst({where:{studentId,batchEnrollment:{batchId:exam.batchId}},select:{balanceAmount:true}});
+ return Boolean(ledger&&Number(ledger.balanceAmount)>0);
+}
 export async function GET(req){
  const student=await getCurrentStudent();if(!student)return NextResponse.json({error:"Unauthorized"},{status:401});
  const examId=new URL(req.url).searchParams.get("examId");
@@ -27,7 +32,8 @@ export async function POST(req){
   const body=await req.json();
   if(body.action==="START"){
    const d=startSchema.parse(body);const exam=await access(student.id,d.examId);if(!exam)throw new Error("Exam is not available for your active course or batch.");
-   const attempts=await db.examAttempt.count({where:{examId:exam.id,studentId:student.id,status:{not:"CANCELLED"}}});if(attempts>=exam.maxAttempts)throw new Error("Maximum attempts reached.");
+   if(await outstandingFees(student.id,exam))throw new Error("Outstanding course fees must be cleared before starting this exam.");
+   const attempts=await db.examAttempt.count({where:{examId:exam.id,studentId:student.id,status:{not:"CANCELLED"}}});if(exam.maxAttempts>0&&attempts>=exam.maxAttempts)throw new Error("Maximum attempts reached.");
    const existing=await db.examAttempt.findFirst({where:{examId:exam.id,studentId:student.id,status:"IN_PROGRESS"},orderBy:{startedAt:"desc"}});if(existing)return NextResponse.json({attemptId:existing.id,startedAt:existing.startedAt});
    const attempt=await db.examAttempt.create({data:{examId:exam.id,studentId:student.id,attemptNo:attempts+1}});
    return NextResponse.json({attemptId:attempt.id,startedAt:attempt.startedAt});
