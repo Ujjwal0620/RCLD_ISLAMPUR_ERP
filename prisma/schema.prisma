@@ -820,7 +820,6 @@ model Subject {
   chapters    Chapter[]
   schedules   BatchSchedule[]
   requiredSkills SubjectRequiredSkill[]
-  chapterProgress ChapterProgress[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
