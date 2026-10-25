@@ -3,7 +3,8 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
-const schema=z.object({batchSeriesId:z.string(),subjectId:z.string().optional().or(z.literal("")),employeeId:z.string().optional().or(z.literal("")),dayOfWeek:z.coerce.number().int().min(1).max(7),startTime:z.string().regex(/^([01]\\d|2[0-3]):[0-5]\\d$/),endTime:z.string().regex(/^([01]\\d|2[0-3]):[0-5]\\d$/),room:z.string().trim().max(80).optional().or(z.literal(""))}).refine(d=>d.startTime<d.endTime,{message:"End time must be after start time.",path:["endTime"]});
+const baseSchema=z.object({batchSeriesId:z.string(),subjectId:z.string().optional().or(z.literal("")),employeeId:z.string().optional().or(z.literal("")),dayOfWeek:z.coerce.number().int().min(1).max(7),startTime:z.string().regex(/^([01]\\d|2[0-3]):[0-5]\\d$/),endTime:z.string().regex(/^([01]\\d|2[0-3]):[0-5]\\d$/),room:z.string().trim().max(80).optional().or(z.literal(""))});
+const schema=baseSchema.refine(d=>d.startTime<d.endTime,{message:"End time must be after start time.",path:["endTime"]});
 const overlaps=(s,e)=>({startTime:{lt:e},endTime:{gt:s}});
 export async function POST(req){
  const user=await getCurrentUser(); if(!user||!hasPermission(user,"batches.manage")) return NextResponse.json({error:"Forbidden"},{status:403});
@@ -26,7 +27,7 @@ export async function POST(req){
   return NextResponse.json({schedule},{status:201});
  }catch(e){return NextResponse.json({error:e?.issues?.[0]?.message||"Unable to create timetable entry."},{status:400});}
 }
-const patchSchema=schema.extend({scheduleId:z.string(),reason:z.string().trim().min(2).max(500)});
+const patchSchema=baseSchema.extend({scheduleId:z.string(),reason:z.string().trim().min(2).max(500)}).refine(d=>d.startTime<d.endTime,{message:"End time must be after start time.",path:["endTime"]});
 export async function PATCH(req){
  const user=await getCurrentUser();if(!user||!hasPermission(user,"batches.manage"))return NextResponse.json({error:"Forbidden"},{status:403});
  try{const d=patchSchema.parse(await req.json());const old=await db.batchSchedule.findUnique({where:{id:d.scheduleId}});if(!old)return NextResponse.json({error:"Schedule not found."},{status:404});
