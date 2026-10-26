@@ -42,8 +42,8 @@ export default async function BatchesPage() {
           <div className="grid gap-7 lg:grid-cols-[1fr_auto] lg:items-end">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[.06] px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-blue-200"><Layers3 size={12}/> Academic Operations</span>
-              <h1 className="mt-5 text-3xl font-black tracking-[-.04em] sm:text-5xl">Batch Management</h1>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Create structured batches, control capacity and keep academic groups ready for student allocation.</p>
+              <h1 className="mt-4 text-3xl font-black tracking-[-.04em] sm:text-5xl">Batch Management</h1><div className="mt-3 flex flex-wrap gap-2 text-[10px] font-black"><span className="rounded-full bg-white/10 px-3 py-1.5 text-blue-100">Simple workflow</span><span className="rounded-full bg-white/10 px-3 py-1.5 text-slate-300">All changes are database-backed</span></div>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Create, manage and understand every batch in one place. A batch owns the students; its series control the timetable.</p>
             </div>
             <div className="grid grid-cols-3 gap-2">
               <Metric label="Total" value={batches.length}/>
