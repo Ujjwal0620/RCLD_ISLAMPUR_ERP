@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { hasPermission } from "@/lib/permissions";
 
-const schema=z.object({studentId:z.string(),status:z.enum(["ACTIVE","COMPLETED","TRANSFERRED","DROPPED_OUT","SUSPENDED","CANCELLED"]),reason:z.string().trim().max(300).optional().or(z.literal(""))});
+const schema=z.object({studentId:z.string(),status:z.enum(["REGISTERED","ADMISSION_PENDING","ACTIVE","COURSE_COMPLETED","COMPLETED","TRANSFERRED","DROPPED_OUT","SUSPENDED","CANCELLED","ALUMNI"]),reason:z.string().trim().max(300).optional().or(z.literal(""))});
 
 export async function POST(req){
  const user=await getCurrentUser();
@@ -15,7 +15,8 @@ export async function POST(req){
    const student=await tx.student.findUnique({where:{id:d.studentId},select:{id:true,name:true,status:true}});
    if(!student)throw new Error("Student not found.");
    if(student.status===d.status)throw new Error("Student already has this status.");
-   const deactivate=["COMPLETED","DROPPED_OUT","CANCELLED"].includes(d.status);
+   if(["DROPPED_OUT","CANCELLED","SUSPENDED"].includes(d.status)&&!d.reason)throw new Error("A reason is required for this status change.");
+   const deactivate=["COURSE_COMPLETED","COMPLETED","DROPPED_OUT","CANCELLED","ALUMNI"].includes(d.status);
    if(deactivate)await tx.batchEnrollment.updateMany({where:{studentId:d.studentId,active:true},data:{active:false,leftAt:new Date()}});
    const updated=await tx.student.update({where:{id:d.studentId},data:{status:d.status}});
    await tx.auditLog.create({data:{actorUserId:user.id,action:"STUDENT_STATUS_CHANGED",entityType:"Student",entityId:d.studentId,metadata:{from:student.status,to:d.status,reason:d.reason||null}}});
