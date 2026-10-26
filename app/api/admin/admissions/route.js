@@ -16,6 +16,7 @@ const schema = z.object({
   discountAmount: z.coerce.number().nonnegative().default(0),
   installmentCount: z.coerce.number().int().min(1).max(12).default(1),
   firstDueDate: z.string().optional().or(z.literal("")),
+  discountReason: z.string().trim().max(300).optional().or(z.literal("")),
 });
 
 export async function POST(req) {
@@ -51,6 +52,7 @@ export async function POST(req) {
       if (requestedDiscount > 0 && !isSuperadmin) {
         throw new Error("Only Superadmin can apply admission discounts.");
       }
+      if (requestedDiscount > 0 && !d.discountReason) throw new Error("Discount reason is required.");
 
       let courseFee = pricing.finalFee;
       let discountAmount = 0;
@@ -98,6 +100,9 @@ export async function POST(req) {
           discountAmount,
           discountTypeAtAdmission,
           discountValueAtAdmission,
+          discountReason: discountAmount > 0 ? d.discountReason : null,
+          discountApprovedById: discountAmount > 0 ? user.id : null,
+          discountApprovedAt: discountAmount > 0 ? new Date() : null,
           admissionFeeAtAdmission,
           finalAmount,
           paidAmount: 0,
