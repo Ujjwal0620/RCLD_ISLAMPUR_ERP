@@ -30,7 +30,7 @@ export default async function CoursesPage() {
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[.06] px-3 py-1.5 text-[10px] font-black uppercase tracking-[.18em] text-blue-200"><BookOpen size={12} /> Academic Catalogue</span>
               <h1 className="mt-5 text-3xl font-black tracking-[-.04em] sm:text-5xl">Course Control</h1>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Configure official programmes, fees, discounts, syllabus and online publishing from one workspace.</p>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">Create courses first. Then define subjects and chapters. Batches use these courses.</p>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
               <Metric label="Courses" value={courses.length} />
