@@ -23,7 +23,7 @@ export default async function BatchesPage() {
   const [batches, courses, totalStudents, employees] = await Promise.all([
     db.batch.findMany({
       orderBy: [{ status: "asc" }, { startsAt: "desc" }],
-      include: { course: { select: { code: true, name: true } }, _count: { select: { enrollments: true } }, faculties: { include: { employee: { include: { user: { select: { name: true } } } } } }, enrollments: { where: { active: true }, select: { id: true, student: { select: { name: true, registrationNo: true } } }, take: 100 } },
+      include: { course: { select: { code: true, name: true } }, academicSession: { select: { name: true } }, series: { where: { active: true }, select: { id: true, code: true, _count: { select: { schedules: true } } } }, _count: { select: { enrollments: true } }, faculties: { include: { employee: { include: { user: { select: { name: true } } } } } }, enrollments: { where: { active: true }, select: { id: true, student: { select: { name: true, registrationNo: true } } }, take: 100 } },
       take: 100,
     }),
     db.course.findMany({ where: { active: true }, orderBy: { code: "asc" }, select: { id: true, code: true, name: true } }),
@@ -72,7 +72,7 @@ export default async function BatchesPage() {
                 return (
                   <article key={batch.id} className="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,.045)] transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_18px_50px_rgba(37,99,235,.09)]">
                     <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0"><div className="font-mono text-[10px] font-black tracking-[.15em] text-blue-600">{batch.code}</div><h3 className="mt-1 truncate text-base font-black">{batch.name}</h3><p className="mt-1 truncate text-xs text-slate-500">{batch.course.code} · {batch.course.name}</p></div>
+                      <div className="min-w-0"><div className="font-mono text-[10px] font-black tracking-[.15em] text-blue-600">{batch.code}</div><h3 className="mt-1 truncate text-base font-black">{batch.name}</h3><p className="mt-1 truncate text-xs text-slate-500">{batch.course.code} · {batch.course.name} · {batch.academicSession?.name||"No session"}</p><div className="mt-2 flex flex-wrap gap-1">{batch.series.map(s=><span key={s.id} className="rounded-md bg-blue-50 px-2 py-1 text-[9px] font-black text-blue-700">{s.code} · {s._count.schedules} slots</span>)}</div></div>
                       <span className={"shrink-0 rounded-full px-2.5 py-1 text-[10px] font-black "+tone}>{status}</span>
                     </div>
                     <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
@@ -81,7 +81,7 @@ export default async function BatchesPage() {
                     </div>
                     <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500" style={{width: percent+"%"}}/></div>
                     <div className="mt-3 flex items-center justify-between text-[10px] font-bold text-slate-400">
-                      <span>{percent}% capacity</span>
+                      <span>{percent}% capacity · {batch.series.length} series · {batch.series.reduce((n,s)=>n+s._count.schedules,0)} classes</span>
                       <span>{batch.startTime && batch.endTime ? batch.startTime+"–"+batch.endTime : "Time not set"}{batch.room ? " · "+batch.room : ""}</span>
                       <span className="inline-flex items-center gap-1 group-hover:text-blue-600">Manage <ArrowUpRight size={12}/></span>
                     </div>
