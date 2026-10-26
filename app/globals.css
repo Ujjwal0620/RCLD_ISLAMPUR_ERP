@@ -161,3 +161,22 @@ body{font-family:var(--font-outfit),Arial,sans-serif}
 .public-card{border-radius:1.25rem}
 .public-cta{border-radius:1.5rem}
 @media(min-width:1024px){.erp-workspace main{padding-top:1.35rem}}
+
+
+/* V1 usability layer: consistent, calm, information-first controls */
+.erp-page{width:100%;max-width:1500px;margin:0 auto;padding:1.25rem 1rem 3rem}
+.erp-page-title{font-size:clamp(1.75rem,3vw,2.65rem);font-weight:900;letter-spacing:-.04em;color:#0f172a}
+.erp-page-subtitle{margin-top:.5rem;max-width:52rem;color:#64748b;font-size:.82rem;line-height:1.65}
+.erp-section-title{font-size:.95rem;font-weight:900;color:#0f172a}
+.erp-section-help{margin-top:.25rem;color:#64748b;font-size:.72rem;line-height:1.55}
+.erp-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem;border:1px solid #e2e8f0;border-radius:16px;background:#fff;padding:.75rem 1rem;box-shadow:0 5px 20px rgba(15,23,42,.035)}
+.erp-excel-board{border-collapse:separate;border-spacing:0;background:#fff}
+.erp-excel-board th{font-size:9px;font-weight:900;letter-spacing:.08em;color:#475569}
+.erp-excel-board td,.erp-excel-board th{border-color:#e2e8f0}
+.erp-excel-board tbody tr:hover td{background:#f8fafc}
+.erp-empty{border:1px dashed #cbd5e1;border-radius:18px;background:#fff;padding:3rem 1rem;text-align:center;color:#64748b}
+.erp-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border-radius:12px;background:#1d4ed8;color:#fff;padding:.7rem 1rem;font-size:.75rem;font-weight:900;box-shadow:0 8px 24px rgba(29,78,216,.14);transition:.18s}
+.erp-primary:hover{background:#1e40af;transform:translateY(-1px)}
+.erp-secondary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:1px solid #e2e8f0;border-radius:12px;background:#fff;color:#334155;padding:.7rem 1rem;font-size:.75rem;font-weight:900;transition:.18s}
+.erp-secondary:hover{background:#f8fafc;border-color:#cbd5e1}
+@media(max-width:640px){.erp-page{padding:.9rem .75rem 2rem}.erp-toolbar{align-items:stretch}.erp-primary,.erp-secondary{width:100%}}
