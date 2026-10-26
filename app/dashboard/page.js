@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { hasPermission, getRoleNames } from "@/lib/permissions";
 import { db } from "@/lib/db";
-import { UsersRound, BookOpen, GraduationCap, IndianRupee, ArrowUpRight, Activity, Plus, ContactRound, CalendarCheck2, ClipboardCheck, Layers3, Sparkles, TrendingUp, ChevronRight, BarChart3 } from "lucide-react";
+import { UsersRound, BookOpen, GraduationCap, IndianRupee, ArrowUpRight, Activity, Plus, ContactRound, CalendarCheck2, ClipboardCheck, Layers3, Sparkles, TrendingUp, ChevronRight, BarChart3, Route, CheckCircle2 } from "lucide-react";
 
 const modules = [
   ["Admissions & Enquiries","Capture leads and convert enquiries into admissions.","/dashboard/admin/admissions",ContactRound,"crm.view"],
@@ -65,6 +65,21 @@ export default async function DashboardPage() {
               <div className="flex flex-wrap gap-2.5">
                 <Link href="/dashboard/admin/students" className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-black text-slate-950 transition hover:-translate-y-0.5 hover:bg-slate-100"><Plus size={16}/> Add student</Link>
                 <Link href="/dashboard/admin/admissions" className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[.06] px-4 py-3 text-sm font-black text-white transition hover:bg-white/10"><ContactRound size={16}/> Admission desk</Link>
+              </div>
+            </div>
+          </section>
+
+          <section className="mt-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div><div className="flex items-center gap-2 text-blue-700"><Route size={17}/><span className="text-[10px] font-black uppercase tracking-[.16em]">Daily operating flow</span></div><h2 className="mt-2 text-lg font-black">Use the ERP in this order</h2><p className="mt-1 text-xs text-slate-500">The system keeps each job in a predictable workflow instead of making you search through modules.</p></div>
+              <div className="flex flex-wrap gap-2">
+                <Flow href="/dashboard/admin/admissions" n="1" label="Admission"/>
+                <Flow href="/dashboard/admin/batches" n="2" label="Batch"/>
+                <Flow href="/dashboard/admin/batches/timetable" n="3" label="Schedule"/>
+                <Flow href="/dashboard/admin/attendance" n="4" label="Attendance"/>
+                <Flow href="/dashboard/admin/fees" n="5" label="Fees"/>
+                <Flow href="/dashboard/admin/exams" n="6" label="Exam"/>
+                <Flow href="/dashboard/admin/certificates" n="7" label="Certificate"/>
               </div>
             </div>
           </section>
@@ -136,3 +151,5 @@ function Pulse({label,value,note}) {
 
 function AnalyticsCard({title,subtitle,icon:Icon,children}){return <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-[0_8px_30px_rgba(15,23,42,.045)] sm:p-6"><div className="flex items-center gap-3"><span className="grid h-10 w-10 place-items-center rounded-xl bg-blue-50 text-blue-700"><Icon size={18}/></span><div><h2 className="font-black">{title}</h2><p className="text-xs text-slate-500">{subtitle}</p></div></div><div className="mt-5 space-y-4">{children}</div></div>}
 function Bar({label,value,max,money=false}){const width=Math.max(value>0?4:0,Math.min(100,Number(value||0)*100/Math.max(1,max)));const shown=money?"₹"+Number(value||0).toLocaleString("en-IN",{maximumFractionDigits:0}):Number(value||0).toLocaleString("en-IN");return <div><div className="mb-2 flex items-center justify-between gap-3"><span className="text-xs font-bold text-slate-600">{label}</span><span className="text-xs font-black text-slate-900">{shown}</span></div><div className="h-2 overflow-hidden rounded-full bg-slate-100"><div className="h-full rounded-full bg-blue-600" style={{width:width+"%"}}/></div></div>}
+
+function Flow({href,n,label}){return <Link href={href} className="group inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-black text-slate-700 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"><span className="grid h-5 w-5 place-items-center rounded-full bg-white text-[9px] shadow-sm">{n}</span>{label}<CheckCircle2 size={12} className="text-slate-300 group-hover:text-blue-500"/></Link>}
