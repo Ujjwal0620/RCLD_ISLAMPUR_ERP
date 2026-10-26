@@ -259,6 +259,7 @@ model Student {
   examAttempts     ExamAttempt[]
   certificates     Certificate[]
   registration     Registration?
+  courseChanges    CourseChange[]
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 }
