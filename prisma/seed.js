@@ -44,7 +44,8 @@ async function ensureRole(name, description, permissionKeys = []) {
   return role;
 }
 
-async function seedDemoData(demoPassword) {
+async function seedDemoData(demoPassword, context) {
+  const { centre, session, departments, skills } = context;
   const passwordHash = await bcrypt.hash(demoPassword, 10);
   const facultyRole = await ensureRole("FACULTY","Faculty access",["dashboard.view","students.view","batches.view","exams.view","tasks.view"]);
   const adminRole = await ensureRole("ADMIN","Administrative access",["dashboard.view","students.view","students.manage","courses.view","batches.view","batches.manage","fees.view","fees.manage","employees.view","tasks.view","tasks.manage","reports.view"]);
@@ -159,6 +160,16 @@ async function main() {
   const email=user.email;
   await db.userRole.upsert({where:{userId_roleId:{userId:user.id,roleId:superadmin.id}},update:{},create:{userId:user.id,roleId:superadmin.id}});
 
+  const organization = await db.organization.upsert({where:{code:"RCLD"},update:{name:"RCLD Islampur",active:true},create:{code:"RCLD",name:"RCLD Islampur",active:true}});
+  const centre = await db.centre.upsert({where:{code:"ISL"},update:{organizationId:organization.id,name:"RCLD Islampur",active:true},create:{organizationId:organization.id,code:"ISL",name:"RCLD Islampur",active:true}});
+  const session = await db.academicSession.upsert({where:{centreId_name:{centreId:centre.id,name:"2026-27"}},update:{active:true},create:{centreId:centre.id,name:"2026-27",startsAt:new Date("2026-04-01"),endsAt:new Date("2027-03-31"),active:true}});
+  const departmentNames=["Administration","Teaching/Faculty","Accounts","IT","Marketing","HR","Other"];
+  const departments={};
+  for(const name of departmentNames) departments[name]=await db.department.upsert({where:{centreId_name:{centreId:centre.id,name}},update:{active:true},create:{centreId:centre.id,name,active:true}});
+  const skillNames=["fundamentals","DOS","windows","ms word","ms excel","ms power point","ms access","blue java","html","internet and email","c programming","javascript","python","sql","visual basics","vb.net","ms outlook","corel draw","photoshop","tally erp 9","gen ai tools","hardware","networking","cctv installation","cyber security","online works","scratch","css","java","android development"];
+  const skills=[];
+  for(const name of skillNames) skills.push(await db.skill.upsert({where:{name},update:{active:true},create:{name,active:true}}));
+
   for (const course of courses) {
     await db.course.upsert({
       where:{code:course.code},
@@ -167,7 +178,7 @@ async function main() {
     });
   }
 
-  await seedDemoData("RcldDemo@321");
+  await seedDemoData("RcldDemo@321",{centre,session,departments,skills});
   console.log("RCLD seeded:",email);
 }
 main().catch((error)=>{console.error(error);process.exitCode=1;}).finally(()=>db.$disconnect());
