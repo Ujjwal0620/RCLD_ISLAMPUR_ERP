@@ -58,7 +58,7 @@ export default async function Home() {
 
       <HomeHeroSlider initialSlides={homeSlides} />
 
-      <section className="public-section">
+      <section className="public-section public-home-programs">
         <div className="mx-auto max-w-7xl px-6">
           <div className="public-section-head">
             <div>
@@ -83,7 +83,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="public-section border-y border-white/[.06] bg-white/[.018]">
+      <section className="public-section border-y border-white/[.06] bg-white/[.018] public-home-learning">
         <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-2 lg:items-center">
           <div>
             <span className="public-eyebrow">Built around the learner</span>
@@ -122,8 +122,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="public-section">
-        <div className="mx-auto max-w-7xl px-6">
+      <section className="public-section public-home-trust">\n        <div className="mx-auto max-w-7xl px-6">
           <div className="grid gap-4 md:grid-cols-3">
             {[
               [Users, "Student-first experience", "Simple navigation, focused dashboards and clear progress."],
