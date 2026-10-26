@@ -63,3 +63,12 @@ A post-development restore point must only be promoted after Prisma validation, 
 - **Status:** Recovery checkpoint (pre-phase; not a stable production promotion)
 - **Scope:** State before enforcing the frozen V1 student/finance/exam/certificate business rules.
 - **Database note:** Git rollback does not reverse PostgreSQL schema/data changes.
+
+
+## Recovery Checkpoint: Pre Lifecycle & Completion Rules — 2026-10-26
+
+- **Commit:** `338cfda86042610a3ee35066e29c60d3256f28e9`
+- **Branch:** `restore/2026-10-26-pre-lifecycle-completion-rules`
+- **Status:** Recovery checkpoint; the baseline commit passed GitHub Actions.
+- **Scope:** State immediately before student lifecycle, course-change, late-fee, course-completion, certificate override and session-rollover development.
+- **Database note:** Git rollback does not roll back PostgreSQL schema/data.
