@@ -24,7 +24,10 @@ export async function GET(req){
  const student=await getCurrentStudent();if(!student)return NextResponse.json({error:"Unauthorized"},{status:401});
  const examId=new URL(req.url).searchParams.get("examId");
  const exams=examId?[await access(student.id,examId)].filter(Boolean):await db.exam.findMany({where:{published:true,OR:[{course:{onlineEnrollments:{some:{studentId:student.id,status:"ACTIVE"}}}},{batch:{enrollments:{some:{studentId:student.id,active:true}}}}]},orderBy:{createdAt:"desc"},include:{course:{select:{code:true,name:true}},batch:{select:{code:true,name:true,course:{select:{code:true,name:true}}}},_count:{select:{questions:true}}}});
- return NextResponse.json({exams});
+ const examIds=exams.map(e=>e.id);
+ const bestRows=examIds.length?await db.examAttempt.groupBy({by:["examId"],where:{studentId:student.id,examId:{in:examIds},status:"GRADED"},_max:{score:true,percentage:true}}):[];
+ const bestByExam=Object.fromEntries(bestRows.map(r=>[r.examId,{score:r._max.score===null?null:Number(r._max.score),percentage:r._max.percentage===null?null:Number(r._max.percentage)}]));
+ return NextResponse.json({exams,bestResults:bestByExam});
 }
 export async function POST(req){
  const student=await getCurrentStudent();if(!student)return NextResponse.json({error:"Unauthorized"},{status:401});
