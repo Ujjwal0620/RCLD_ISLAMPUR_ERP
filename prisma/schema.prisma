@@ -20,12 +20,16 @@ enum StudentType {
 }
 
 enum StudentStatus {
+  REGISTERED
+  ADMISSION_PENDING
   ACTIVE
+  COURSE_COMPLETED
   COMPLETED
   TRANSFERRED
   DROPPED_OUT
   SUSPENDED
   CANCELLED
+  ALUMNI
 }
 
 enum BatchStatus {
@@ -335,6 +339,7 @@ model BatchEnrollment {
   batch     Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
   feeLedger FeeLedger?
   transfers BatchTransfer[]
+  courseChanges CourseChange[]
 
   @@unique([studentId, batchId])
   @@index([studentId])
@@ -477,6 +482,9 @@ model FeeLedger {
   discountAmount    Decimal          @default(0) @db.Decimal(12,2)
   discountTypeAtAdmission String?
   discountValueAtAdmission Decimal? @db.Decimal(12,2)
+  discountReason     String?
+  discountApprovedById String?
+  discountApprovedAt DateTime?
   admissionFeeAtAdmission Decimal   @default(0) @db.Decimal(12,2)
   finalAmount       Decimal          @db.Decimal(12,2)
   paidAmount        Decimal          @default(0) @db.Decimal(12,2)
@@ -499,6 +507,12 @@ model FeeInstallment {
   dueDate      DateTime?
   amount       Decimal     @db.Decimal(12,2)
   paidAmount   Decimal    @default(0) @db.Decimal(12,2)
+  lateFee      Decimal    @default(0) @db.Decimal(12,2)
+  gracePeriodDays Int     @default(0)
+  lateFeeWaived Decimal   @default(0) @db.Decimal(12,2)
+  lateFeeWaiverReason String?
+  lateFeeWaivedById String?
+  lateFeeWaivedAt DateTime?
   status       InstallmentStatus @default(PENDING)
   feeLedger    FeeLedger   @relation(fields: [feeLedgerId], references: [id], onDelete: Cascade)
   payments     FeePayment[]
@@ -944,4 +958,28 @@ model FacultySubstitution {
 
   @@index([scheduleId, substitutionDate])
   @@index([substituteEmployeeId, substitutionDate])
+}
+
+
+model CourseChange {
+  id                String          @id @default(cuid())
+  studentId         String
+  fromEnrollmentId  String
+  toEnrollmentId    String?
+  fromCourseId      String
+  toCourseId        String
+  fromBatchId       String
+  toBatchId         String
+  reason            String
+  feeBefore         Decimal         @db.Decimal(12,2)
+  feeAfter          Decimal         @db.Decimal(12,2)
+  adjustmentAmount  Decimal         @db.Decimal(12,2)
+  approvedByUserId  String?
+  approvedAt        DateTime        @default(now())
+  student           Student         @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  fromEnrollment    BatchEnrollment @relation(fields: [fromEnrollmentId], references: [id], onDelete: Restrict)
+  createdAt         DateTime        @default(now())
+
+  @@index([studentId, approvedAt])
+  @@index([fromEnrollmentId])
 }
