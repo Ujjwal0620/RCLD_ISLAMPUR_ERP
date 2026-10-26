@@ -18,6 +18,13 @@ export default async function TimetablePage() {
         id: true,
         code: true,
         name: true,
+        capacity: true,
+        status: true,
+        startTime: true,
+        endTime: true,
+        room: true,
+        _count: { select: { enrollments: true } },
+        academicSession: { select: { name: true } },
         course: {
           select: {
             code: true,
