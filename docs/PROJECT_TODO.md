@@ -331,22 +331,22 @@ A restore point is promoted only after the relevant build passes verification. T
 - [ ] Align final timetable presentation/import with the supplied RCLD batch schedule workbook
 
 ### Student/admission/finance rules
-- [ ] Complete student status lifecycle
-- [ ] Complete course-change approval with fee recalculation and audit history
-- [ ] Complete fixed-amount-only discount approval and audit trail
-- [ ] Complete configurable installment late fee, grace period and auditable waiver
+- [x] Complete student status lifecycle (code implemented; CI/local verification pending)
+- [x] Complete course-change approval with fee recalculation and audit history (backend implemented; CI/local verification pending)
+- [x] Complete fixed-amount-only discount approval and audit trail (backend implemented; CI/local verification pending)
+- [x] Complete configurable installment late fee, grace period and auditable waiver (backend implemented; CI/local verification pending)
 - [ ] Complete automatic fee-due reminder rules
 - [ ] Complete dropout retention and same-identity re-admission
-- [ ] Complete academic-session rollover without deleting historical cohorts
+- [x] Complete academic-session rollover without deleting historical cohorts (backend implemented; CI/local verification pending)
 
 ### Exams/results/certificates
 - [x] Enforce MCQ-only V1 exam authoring (code + CI verified; local runtime verification still required)
 - [x] Enforce outstanding-fee exam eligibility block (code + CI verified; local runtime verification still required)
 - [x] Preserve unlimited re-exam attempt history with no separate re-exam fee (code + CI verified; local runtime verification still required)
 - [x] Use highest score as final result data while retaining all attempts (code implemented; CI/local verification pending)
-- [ ] Enforce course completion = chapters completed + required exams passed + fees cleared
-- [ ] Enforce certificate eligibility = course completed + required exam passed + fees cleared
-- [ ] Add Super Admin certificate override with mandatory reason/audit log
+- [x] Enforce course completion = chapters completed + required exams passed + fees cleared (engine implemented; CI/local verification pending)
+- [x] Enforce certificate eligibility = course completion engine + required exams + fees cleared (backend implemented; CI/local verification pending)
+- [x] Add Super Admin certificate override with mandatory reason/audit log (backend implemented; CI/local verification pending)
 - [ ] Verify student ID/admit-card/certificate QR public-safe verification
 
 ### Release gate
