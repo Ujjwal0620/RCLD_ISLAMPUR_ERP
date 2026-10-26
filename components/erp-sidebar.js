@@ -7,28 +7,28 @@ import {LayoutDashboard,GraduationCap,BookOpen,Layers3,CalendarCheck2,WalletCard
 
 const groups=[
 {label:"Command",items:[{href:"/dashboard",label:"Overview",icon:LayoutDashboard}]},
-{label:"Academic",items:[
-{href:"/dashboard/admin/students/offline",label:"Offline Students",icon:GraduationCap,permission:"students.view"},{href:"/dashboard/admin/students/online",label:"Online Students",icon:MonitorPlay,permission:"students.view"},
-{href:"/dashboard/admin/admissions",label:"Admissions & Enquiries",icon:ContactRound,permission:"crm.view"},
+{label:"Students & Learning",items:[
+{href:"/dashboard/admin/students/offline",label:"Students",icon:GraduationCap,permission:"students.view"},{href:"/dashboard/admin/students/online",label:"Online Students",icon:MonitorPlay,permission:"students.view"},
+{href:"/dashboard/admin/admissions",label:"Admissions",icon:ContactRound,permission:"crm.view"},
 {href:"/dashboard/admin/courses",label:"Courses",icon:BookOpen,permission:"courses.manage"},
-{href:"/dashboard/admin/batches",label:"Batch Management",icon:Layers3,permission:"batches.view"},{href:"/dashboard/admin/batches/timetable",label:"Series & Timetable",icon:CalendarCheck2,permission:"batches.view"},
+{href:"/dashboard/admin/batches",label:"Batches",icon:Layers3,permission:"batches.view"},{href:"/dashboard/admin/batches/timetable",label:"Series & Timetable",icon:CalendarCheck2,permission:"batches.view"},
 {href:"/dashboard/admin/attendance",label:"Attendance",icon:CalendarCheck2,permission:"students.view"},{href:"/dashboard/admin/attendance/reports",label:"Attendance Reports",icon:BarChart3,permission:"reports.view"},
 {href:"/dashboard/admin/exams",label:"Exams & Results",icon:ClipboardCheck,permission:"exams.view"},{href:"/dashboard/admin/exams/results",label:"Result Grading",icon:BarChart3,permission:"exams.view"},
 {href:"/dashboard/admin/certificates",label:"Certificates",icon:Award,permission:"certificates.issue"}]},
-{label:"People & CRM",items:[
-{href:"/dashboard/admin/employees",label:"Employees",icon:UserCog,permission:"employees.manage"},{href:"/dashboard/admin/attendance/employee",label:"Employee Attendance",icon:CalendarCheck2,permission:"employees.view"},{href:"/dashboard/admin/users",label:"Users & Access",icon:ShieldCheck,permission:"employees.manage"},
+{label:"People & Work",items:[
+{href:"/dashboard/admin/employees",label:"Employees & Staff",icon:UserCog,permission:"employees.manage"},{href:"/dashboard/admin/attendance/employee",label:"Employee Attendance",icon:CalendarCheck2,permission:"employees.view"},{href:"/dashboard/admin/users",label:"Users & Access",icon:ShieldCheck,permission:"employees.manage"},
 {href:"/dashboard/admin/crm",label:"CRM & Follow-ups",icon:ContactRound,permission:"crm.view"},
 {href:"/dashboard/admin/communication",label:"Communication",icon:Megaphone,permission:"dashboard.view"}]},
-{label:"Finance & Operations",items:[
-{href:"/dashboard/admin/fees",label:"Fees & Finance",icon:WalletCards,permission:"finance.view"},
+{label:"Money & Operations",items:[
+{href:"/dashboard/admin/fees",label:"Fees & Payments",icon:WalletCards,permission:"finance.view"},
 {href:"/dashboard/admin/inventory",label:"Inventory & Assets",icon:Package,permission:"inventory.manage"},
 {href:"/dashboard/admin/payroll",label:"Payroll & Leave",icon:Banknote,permission:"employees.manage"},
 {href:"/dashboard/admin/reports",label:"Reports & Analytics",icon:BarChart3,permission:"reports.view"}]},
-{label:"Learning & Intelligence",items:[
+{label:"Learning & Tools",items:[
 {href:"/dashboard/admin/courses/content",label:"LMS Content",icon:BookOpen,permission:"lms.manage"},
 {href:"/dashboard/admin/ai",label:"AI Workspace",icon:BrainCircuit,permission:"ai.analytics.organization"}]},
 {label:"Administration",items:[
-{href:"/dashboard/admin/roles",label:"Roles & Permissions",icon:ShieldCheck,permission:"roles.manage"},
+{href:"/dashboard/admin/roles",label:"Roles & Access",icon:ShieldCheck,permission:"roles.manage"},
 {href:"/dashboard/admin/audit",label:"Audit Logs",icon:FileSearch,permission:"audit.view"},
 {href:"/dashboard/admin/homepage",label:"Homepage Content",icon:MonitorPlay,permission:"cms.edit"},
 {href:"/dashboard/admin/settings",label:"System Settings",icon:Settings,permission:"roles.manage"}]}];
