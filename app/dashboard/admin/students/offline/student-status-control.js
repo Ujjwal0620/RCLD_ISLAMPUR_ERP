@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const statuses=["ACTIVE","COMPLETED","TRANSFERRED","DROPPED_OUT","SUSPENDED","CANCELLED"];
+const statuses=["REGISTERED","ADMISSION_PENDING","ACTIVE","COURSE_COMPLETED","DROPPED_OUT","SUSPENDED","CANCELLED","ALUMNI"];
 export default function StudentStatusControl({studentId,value,canManage}){
  const [status,setStatus]=useState(value); const [reason,setReason]=useState(""); const [busy,setBusy]=useState(false); const [msg,setMsg]=useState("");
  if(!canManage)return <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[10px] font-black">{String(value).replaceAll("_"," ")}</span>;
