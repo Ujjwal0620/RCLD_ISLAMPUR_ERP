@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { hasPermission } from "@/lib/permissions";
+import { hasPermission, getRoleNames } from "@/lib/permissions";
 import { db } from "@/lib/db";
 import { UsersRound, BookOpen, GraduationCap, IndianRupee, ArrowUpRight, Activity, Plus, ContactRound, CalendarCheck2, ClipboardCheck, Layers3, Sparkles, TrendingUp, ChevronRight, BarChart3 } from "lucide-react";
 
@@ -17,6 +17,11 @@ const modules = [
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  const roleNames=getRoleNames(user);
+  if(roleNames.some(r=>["FACULTY","ADMIN","HR","IT SUPPORT","ACCOUNTANT","RECEPTIONIST"].includes(r))&&!roleNames.includes("SUPERADMIN")){
+    const employee=await db.employee.findUnique({where:{userId:user.id},select:{id:true}});
+    if(employee&&!hasPermission(user,"roles.manage")) redirect("/dashboard/employee");
+  }
 
   const [students,courses,enrollments,users,online,pending,audit,batches,offline,employees,feeLedgers,attendance] = await Promise.all([
     db.student.count(),
